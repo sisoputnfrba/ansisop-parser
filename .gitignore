@@ -1,0 +1,29 @@
+# Object files
+*.o
+*.ko
+*.d
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*/Debug
+*/build
+
+# Logs
+*.log
+
+# Eclipse adds
+*.project
+*.cproject
+*/.settings
