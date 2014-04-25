@@ -17,7 +17,7 @@
 #include "metadata_program.h"
 
 char* _separarLineas(char*);
-void _agregarEtiqueta(char*, int*, t_medatada_program*, char*);
+void _agregarEtiqueta(char*, t_medatada_program*, char*);
 
 t_medatada_program* metadatada_desde_literal(char* program_literal){
 	t_medatada_program* ret = malloc( sizeof(t_medatada_program) );
@@ -26,7 +26,6 @@ t_medatada_program* metadatada_desde_literal(char* program_literal){
 	char* buffer;
 
 	int position = 0;			//Bytes de offset en el literal
-	int etiqueteasSize = 0;	//No es cuantas etiquetas, sino el tamanio  fisico de las etiquetas
 	int tamanioTotal = strlen(program_literal);
 
 	_separarLineas(program_literal);
@@ -39,9 +38,11 @@ t_medatada_program* metadatada_desde_literal(char* program_literal){
 			ret->instruccion_inicio = ret->instrucciones_size;
 		} else {
 			if(	string_starts_with(buffer, TEXT_START_LABEL) ){
-				_agregarEtiqueta(buffer, &etiqueteasSize, ret, TEXT_START_LABEL);
+				_agregarEtiqueta(buffer, ret, TEXT_START_LABEL);
+				ret->cantidad_de_etiquetas++;
 			} else if( string_starts_with(buffer, TEXT_FUNCTION) ){
-				_agregarEtiqueta(buffer, &etiqueteasSize, ret, TEXT_FUNCTION);
+				_agregarEtiqueta(buffer, ret, TEXT_FUNCTION);
+				ret->cantidad_de_funciones++;
 			} else if( !(buffer[0] == TEXT_COMMENT || buffer[0] == '\0') ) {
 					ret->instrucciones_size++;
 					ret->instrucciones_serializado = realloc( ret->instrucciones_serializado, sizeof(t_intructions) * ret->instrucciones_size );
@@ -86,15 +87,13 @@ char* _separarLineas(char* linea){
 	return linea;
 }
 
-void _agregarEtiqueta(char* linea, int* etiquetaSz, t_medatada_program* programa, char* prefix){
-	programa->cantidad_de_funciones++;
+void _agregarEtiqueta(char* linea, t_medatada_program* programa, char* prefix){
 	char* auxName = linea + strlen(prefix) ;
 	int etiquetaNameLength = (strlen(auxName) +1) * sizeof(char);
 
-	programa->etiquetas = realloc(programa->etiquetas, *etiquetaSz + etiquetaNameLength + sizeof(t_puntero_instruccion));
-	memcpy(programa->etiquetas+*etiquetaSz, auxName, etiquetaNameLength );
-	memcpy(programa->etiquetas+*etiquetaSz+etiquetaNameLength, &programa->instrucciones_size, sizeof(t_puntero_instruccion) );
+	programa->etiquetas = realloc(programa->etiquetas, programa->etiquetas_size + etiquetaNameLength + sizeof(t_puntero_instruccion));
+	memcpy(programa->etiquetas+programa->etiquetas_size, auxName, etiquetaNameLength );
+	memcpy(programa->etiquetas+programa->etiquetas_size+etiquetaNameLength, &programa->instrucciones_size, sizeof(t_puntero_instruccion) );
 
-	*etiquetaSz += etiquetaNameLength+sizeof(t_puntero_instruccion);
-	programa->etiquetas_size++;
+	programa->etiquetas_size += etiquetaNameLength+sizeof(t_puntero_instruccion);
 }
