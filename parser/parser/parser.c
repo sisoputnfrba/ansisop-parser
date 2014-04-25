@@ -44,7 +44,7 @@ char** _obtenerParametros(char* params, t_valor_variable* parametrosValor, AnSIS
 void _llamadaFuncion(char* parametrosLiteral, void(*helper_llamada)(void), AnSISOP_funciones* como);
 
 //LINEA queda destruido
-void analizadorLinea(char* instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel){
+void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel){
 	char *linea = strdup( _string_trim(instruccion) );
 
 	if( _esFin(linea) ){
@@ -199,12 +199,12 @@ bool _esEspacio(char caracter){
 bool _separarDelimitadorYHacer(char* linea, t_puntero (*operacion_mandar)(t_nombre_variable)){
 	char* lista_variables = _string_trim(linea + strlen(TEXT_VARIABLE));
 	char* *variables = string_split(lista_variables, TEXT_DELIM);
-	char* *variablesIterator = variables;
 
-	while (*variablesIterator != NULL) {
-		operacion_mandar( _string_trim(*variablesIterator)[0] );
-		variablesIterator++;
+	void __helperSend(char* valor){
+		operacion_mandar( _string_trim(valor)[0] );
 	}
+
+	string_iterate_lines(variables, __helperSend);
 	string_iterate_lines(variables, (void*)free);
 	free(variables);
 	return true;

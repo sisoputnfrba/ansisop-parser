@@ -252,7 +252,7 @@
 		void (*AnSISOP_signal)(t_nombre_semaforo identificador_semaforo);
 	} AnSISOP_kernel;
 
-	void analizadorLinea(char* instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel);
+	void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel);
 	char* _string_trim(char*);
 
 #endif
