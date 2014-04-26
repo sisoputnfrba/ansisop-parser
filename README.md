@@ -16,7 +16,7 @@ La biblioteca cuenta con dos grandes funcionalidades:
 ### Guía de Instalación
 1. Instalar la biblioteca compartida *commons* ([Guía de Instalación](https://github.com/sisoputnfrba/so-commons-library#gu%C3%ADa-de-instalaci%C3%B3n))
 2. `cd parser`: Ir al directorio de la biblioteca compartida
-3. `make all`: Compilar la biblioteca compartida
+3. `make all`: Compilar la biblioteca compartida *(de no utilizar nuestro makefile, recordar linkear con la biblioteca de commons)*
 4. `ls build/`: Revisar que exista el archivo *libparser-ansisop.so* dentro del directorio `build/`
 5. `sudo make install`: Instala la biblioteca, para que todos tengan acceso a la misma
 
