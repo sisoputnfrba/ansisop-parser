@@ -62,13 +62,13 @@ void metadata_destruir(t_medatada_program* victima){
 	free(victima);
 }
 
-t_puntero_instruccion metadata_buscar_etiqueta(const t_medatada_program* const programa, const t_nombre_etiqueta etiqueta){
+t_puntero_instruccion metadata_buscar_etiqueta(const t_nombre_etiqueta objetivo, const char *etiquetas, const t_size etiquetas_size) {
 	int i=0;
 	int offset = 0;
 	char* nombre;
-	for(i=0; i < programa->etiquetas_size; i++){
-		nombre = programa->etiquetas + offset;
-		if( string_equals_ignore_case(nombre, etiqueta) )
+	for(i=0; i < etiquetas_size; i++){
+		nombre = etiquetas + offset;
+		if( string_equals_ignore_case(nombre, objetivo) )
 			return *(nombre + 1 + strlen(nombre));
 		offset += strlen(nombre) + 1 + sizeof(t_puntero_instruccion);
 	}
