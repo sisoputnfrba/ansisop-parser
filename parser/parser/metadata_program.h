@@ -42,10 +42,14 @@
 
 		int				cantidad_de_funciones;
 		int				cantidad_de_etiquetas;
-	} t_medatada_program;
+	} t_metadata_program;
 
-t_medatada_program* metadatada_desde_literal(const char*);
-void metadata_destruir(t_medatada_program*);
+t_metadata_program* metadata_desde_literal(const char*);
+void metadata_destruir(t_metadata_program*);
 t_puntero_instruccion metadata_buscar_etiqueta(const t_nombre_etiqueta objetivo, const char *etiquetas, const t_size etiquetas_size);
+
+// compatibilidad hacia atras
+t_metadata_program* metadatada_desde_literal(const char*);
+typedef t_metadata_program t_medatada_program;
 
 #endif
