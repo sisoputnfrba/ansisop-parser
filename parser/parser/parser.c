@@ -122,10 +122,13 @@ bool _string_contiene(char* aguja, char* pajar){
 
 char* _string_trim(char* texto){
     int i;
+    int len = strlen(texto) + 1;
+    char *aux = malloc(len);
+
     while (_esEspacio (*texto)) texto++;   //Anda a el primer no-espacio
     for (i = strlen (texto) - 1; i>0 && (_esEspacio (texto[i])); i--);   //y de atras para adelante
-    texto[i + 1] = '\0';
-    return texto;
+    aux[i + 1] = '\0';
+    return aux;
 }
 
 bool _esDefinicionVariable(char* linea){
