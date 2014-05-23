@@ -43,9 +43,12 @@ t_valor_variable _operar(char* operador, AnSISOP_funciones* como);
 char** _obtenerParametros(char* params, t_valor_variable* parametrosValor, AnSISOP_funciones *operations);
 void _llamadaFuncion(char* parametrosLiteral, void(*helper_llamada)(void), AnSISOP_funciones* como);
 
-//LINEA queda destruido
 void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel){
-	char *linea = strdup( _string_trim(instruccion) );
+	char	*linea,
+			*lineaTemporal = linea = strdup( instruccion );
+	linea = strdup( _string_trim(linea) );
+	free(lineaTemporal);
+
 
 	if( _esFin(linea) ){
 		AnSISOP_funciones->AnSISOP_finalizar();
