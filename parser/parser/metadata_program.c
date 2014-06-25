@@ -71,7 +71,7 @@ void metadata_destruir(t_metadata_program* victima){
 t_puntero_instruccion metadata_buscar_etiqueta(const t_nombre_etiqueta objetivo, const char *etiquetas, const t_size etiquetas_size) {
 	int offset = 0;
 	while(offset < etiquetas_size){
-		char* nombre = etiquetas + offset;
+		const char* nombre = etiquetas + offset;
 		if( strncasecmp(nombre, objetivo, etiquetas_size - offset) == 0 )
 			return *(nombre + strlen(nombre) + 1);
 		offset += strlen(nombre) + 1 + sizeof(t_puntero_instruccion);
