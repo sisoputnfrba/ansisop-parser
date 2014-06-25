@@ -69,13 +69,11 @@ void metadata_destruir(t_metadata_program* victima){
 }
 
 t_puntero_instruccion metadata_buscar_etiqueta(const t_nombre_etiqueta objetivo, const char *etiquetas, const t_size etiquetas_size) {
-	int i=0;
 	int offset = 0;
-	char* nombre;
-	for(i=0; i < etiquetas_size; i++){
-		nombre = etiquetas + offset;
-		if( string_equals_ignore_case(nombre, objetivo) )
-			return *(nombre + 1 + strlen(nombre));
+	while(offset < etiquetas_size){
+		char* nombre = etiquetas + offset;
+		if( strncasecmp(nombre, objetivo, etiquetas_size - offset) == 0 )
+			return *(nombre + strlen(nombre) + 1);
 		offset += strlen(nombre) + 1 + sizeof(t_puntero_instruccion);
 	}
 	return -1;
