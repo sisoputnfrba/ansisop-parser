@@ -2,11 +2,14 @@
 begin
 variables f, i, t
 
+	#`i`: Iterador
+	i=0
+	
 	#`f`: Hasta donde contar
 	f=20
 	:inicio
 
-	#`i`: Iterador
+	#Incrementar el iterador
 	i=i+1
 	
 	#Imprimir el contador
