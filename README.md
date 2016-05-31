@@ -3,7 +3,7 @@
 
 ![AnSISOP](http://i.imgur.com/joNONHL.png)
 
-En este repositorio encontrarán el analizador de linea del lenguaje inventado **[AnSISOP](http://ansisop.florius.com.ar)**, junto con herramientas útiles para obtener meta data de un programa, a ser utilizados en el trabajo práctico "*Está CoverFlow*" de Sistemas Operativos, 1<sup>er</sup> cuatrimestre, 2014.
+En este repositorio encontrarán el analizador de linea del lenguaje inventado **AnSISOP**, junto con herramientas útiles para obtener meta data de un programa, a ser utilizados en los trabajos prácticos "*Está CoverFlow*" y "*Elestac*" de Sistemas Operativos, 1<sup>er</sup> cuatrimestre, 2014 y 2016 respectivamente.
 
 La documentación completa de cada función a implementar se encuentra en [documentación completa](parser/parser/parser.h#L55-L260)
 
