@@ -162,7 +162,7 @@
 		 *
 		 * @sintax	TEXT_CALL (<-)
 		 * @param	etiqueta	Nombre de la funcion
-		 * @param	donde_retornar	Posicion donde insertar el valor de retorno
+		 * @param	donde_retornar	Posicion donde insertar el valor de retornos
 		 * @return	void
 		 */
 		void (*AnSISOP_llamarConRetorno)(t_nombre_etiqueta etiqueta, t_puntero donde_retornar);
@@ -183,10 +183,10 @@
 		/*
 		 * RETORNAR
 		 *
-		 * Cambia el Contexto de Ejecución Actual para volver al Contexto anterior al que se está ejecutando, recuperando el Cursor de Contexto Actual, el Program Counter y la direccion donde retornar, asignando el valor de retorno en esta, previamente apilados en el Stack.
+		 * Cambia el Contexto de Ejecución Actual para volver al Contexto anterior al que se está ejecutando, recuperando el Cursor de Contexto Actual, el Program Counter y la direccion donde retornar, asignando el valor de retornos en esta, previamente apilados en el Stack.
 		 *
 		 * @sintax	TEXT_RETURN (return )
-		 * @param	retorno	Valor a ingresar en la posicion corespondiente
+		 * @param	retornos	Valor a ingresar en la posicion corespondiente
 		 * @return	void
 		 */
 		void (*AnSISOP_retornar)(t_valor_variable retorno);

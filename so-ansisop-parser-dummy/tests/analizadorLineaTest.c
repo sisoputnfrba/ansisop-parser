@@ -13,16 +13,27 @@ context (parser) {
         parserUtilSetup();
 
         funciones->AnSISOP_definirVariable = definirVariable;
+        funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
+        funciones->AnSISOP_dereferenciar = dereferenciar;
+        funciones->AnSISOP_asignar = asignar;
     };
 
     setup();
 
     describe("Si al parser") {
-        it("XXXXXX") {
+        it("definicion de variables") {
             analizadorLinea("variables x, a, g", funciones, kernel);
-                Llamada* llamada = ultimaLlamada();
-                should_string(llamada->nombre) be equal to("definirVariable");
-                should_char(llamada->parametros[0].nombre_variable) be equal to('x');
+                assertDefinirVariable('x');
+                assertDefinirVariable('a');
+                assertDefinirVariable('g');
+        } end
+        it("asignacion de variables") {
+            analizadorLinea("x = a+3", funciones, kernel);
+                assertObtenerPosicion('a');
+                assertDereferenciar(ultimoRetorno()->puntero);
+                assertObtenerPosicion('x');
+                t_valor_variable acumulador = ultimoRetorno()->valor_variable;
+                assertAsignar(ultimoRetorno()->puntero, acumulador+3);
         } end
     } end
 
