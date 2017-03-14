@@ -35,8 +35,9 @@ Llamada* crearLlamada(char* nombre, int cantidadParametros, ...){
 }
 
 Parametro* crearRetorno(){
+    static int num = 0;
     Parametro* ret = malloc(sizeof(Parametro));
-    ret->valor_variable = rand();
+    ret->valor_variable = num++;
     return ret;
 }
 
