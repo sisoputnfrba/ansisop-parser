@@ -2,36 +2,27 @@
 #include <cspecs/cspec.h>
 #include "utils/parserUtils.h"
 
+AnSISOP_funciones *funciones = NULL;
+AnSISOP_kernel *kernel = NULL;
+
 context (parser) {
 
-    AnSISOP_funciones *funciones = NULL;
-    AnSISOP_kernel *kernel = NULL;
-
-    void limpiarFunciones(){
-        if(funciones != NULL)
-            free(funciones);
-        if(kernel != NULL)
-            free(kernel);
-
+    void setup(){
         funciones = malloc(sizeof(AnSISOP_funciones));
         kernel = malloc(sizeof(AnSISOP_kernel));
-    }
+        parserUtilSetup();
 
+        funciones->AnSISOP_definirVariable = definirVariable;
+    };
+
+    setup();
 
     describe("Si al parser") {
-        before {
-            limpiarFunciones();
-        } end
-
-        after {
-            limpiarFunciones();
-        } end
-
-        it("le das una linea es de terminar, entonces ejecuta la funcion de finalizar") {
-            remplazar(finalizar, void, (void){
-                    //Ok!
-            });
-            analizadorLinea("end", funciones, kernel);
+        it("XXXXXX") {
+            analizadorLinea("variables x, a, g", funciones, kernel);
+                Llamada* llamada = ultimaLlamada();
+                should_string(llamada->nombre) be equal to("definirVariable");
+                should_char(llamada->parametros[0].nombre_variable) be equal to('x');
         } end
     } end
 
