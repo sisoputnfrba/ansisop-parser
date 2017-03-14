@@ -250,6 +250,8 @@
 		 * @return	void
 		 */
 		void (*AnSISOP_signal)(t_nombre_semaforo identificador_semaforo);
+
+		t_puntero (*AnSISOP_alocar)(t_valor_variable espacio);
 	} AnSISOP_kernel;
 
 	void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel);

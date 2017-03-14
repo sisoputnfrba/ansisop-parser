@@ -6,6 +6,9 @@
     #include <commons/collections/queue.h>
     #include <stdarg.h>
 
+    #include <time.h>
+    #include <stdlib.h>
+
 
     typedef union {
         t_nombre_variable nombre_variable;
@@ -26,11 +29,14 @@ t_puntero definirVariable(t_nombre_variable);
 t_puntero obtenerPosicionVariable(t_nombre_variable);
 t_valor_variable dereferenciar(t_puntero);
 void asignar(t_puntero, t_valor_variable);
+t_puntero alocar(t_valor_variable);
 
 
 void assertDefinirVariable(t_nombre_variable);
 void assertObtenerPosicion(t_nombre_variable);
 void assertDereferenciar(t_puntero);
 void assertAsignar(t_puntero, t_valor_variable);
+void assertMalloc(t_valor_variable);
+
 
 #endif //ANSISOP_PARSER_PARSERUTILS_H

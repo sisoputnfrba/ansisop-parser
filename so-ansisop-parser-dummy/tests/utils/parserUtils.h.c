@@ -6,6 +6,7 @@ t_queue* retornos = NULL;
 void parserUtilSetup(){
     llamadas = queue_create();
     retornos = queue_create();
+    srand((unsigned int) time(NULL));
 }
 
 Llamada* ultimaLlamada(){
@@ -35,7 +36,7 @@ Llamada* crearLlamada(char* nombre, int cantidadParametros, ...){
 
 Parametro* crearRetorno(){
     Parametro* ret = malloc(sizeof(Parametro));
-    ret->puntero = 123;
+    ret->valor_variable = rand();
     return ret;
 }
 
@@ -66,6 +67,14 @@ void asignar(t_puntero puntero, t_valor_variable valor_variable){
 }
 
 
+t_puntero alocar(t_valor_variable espacio){
+    queue_push(llamadas, crearLlamada("alocar", 1, espacio));
+    Parametro *retorno = crearRetorno();
+    queue_push(retornos, retorno);
+    return retorno->puntero;
+}
+
+
 void assertDefinirVariable(t_nombre_variable valor){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("definirVariable");
@@ -89,4 +98,10 @@ void assertAsignar(t_puntero puntero, t_valor_variable valor){
     should_string(llamada->nombre) be equal to("asignar");
     should_int(llamada->parametros[0].nombre_variable) be equal to(puntero);
     should_int(llamada->parametros[1].puntero) be equal to(valor);
+}
+
+void assertMalloc(t_valor_variable espacio){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("alocar");
+    should_int(llamada->parametros[0].nombre_variable) be equal to(espacio);
 }

@@ -26,6 +26,7 @@ bool _esLlamadaFuncion(char* linea);
 bool _esGoTo(char* linea);
 bool _esLlamadaSignal(char* linea);
 bool _esLlamadaWait(char* linea);
+bool _esAlocar(char* linea);
 bool _esSaltoNZ(char* linea);
 bool _esSaltoZ(char* linea);
 bool _esAsignacion(char* linea);
@@ -89,10 +90,16 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		AnSISOP_funciones_kernel->AnSISOP_signal( _string_trim(linea + strlen(TEXT_SIGNAL)) );
 	} else if( _esLlamadaWait(linea) ){
 		AnSISOP_funciones_kernel->AnSISOP_wait( _string_trim(linea + strlen(TEXT_WAIT)) );
-	} else if( _esEntradaSalida(linea) ){
-		char* *operation = string_split(linea + strlen(TEXT_IO), " ");
-		AnSISOP_funciones->AnSISOP_entradaSalida( _string_trim(operation[0]), atoi(_string_trim(operation[1])) );
-		string_iterate_lines(operation, (void*)free);
+	} else if( _esEntradaSalida(linea) ) {
+		char **operation = string_split(linea + strlen(TEXT_IO), " ");
+		AnSISOP_funciones->AnSISOP_entradaSalida(_string_trim(operation[0]), atoi(_string_trim(operation[1])));
+		string_iterate_lines(operation, (void *) free);
+		free(operation);
+	} else if( _esAlocar(linea) ){
+		//MALLOC POSICION CANTIDAD
+		char **operation = string_split(linea + strlen(TEXT_MALLOC), " ");
+		t_puntero value = AnSISOP_funciones_kernel->AnSISOP_alocar( _operar(operation[1], AnSISOP_funciones) );
+		AnSISOP_funciones->AnSISOP_asignar(value, _obtenerPosicion(operation[0], AnSISOP_funciones) );
 		free(operation);
 	} else if( _esLlamadaFuncion(linea) ){
 		//RETORNO <- ETIQUETA PARAMETROS
@@ -161,6 +168,10 @@ bool _esLlamadaSignal(char* linea){
 
 bool _esLlamadaWait(char* linea){
 	return string_starts_with(linea, TEXT_WAIT);
+}
+
+bool _esAlocar(char* linea){
+	return string_starts_with(linea, TEXT_MALLOC);
 }
 
 bool _esSaltoNZ(char* linea){
