@@ -4,6 +4,7 @@
     #include <parser/parser.h>
     #include <cspecs/cspec.h>
     #include <commons/collections/queue.h>
+    #include <commons/log.h>
     #include <stdarg.h>
 
     #include <time.h>
@@ -21,7 +22,10 @@
         Parametro* parametros;
     } Llamada;
 
-void parserUtilSetup();
+void parserUtilSetup(char *archivo, bool imprimirEnPantalla);
+void parserUtilTearDown();
+
+void limpiarElContextoDeEjecucion();
 Llamada* ultimaLlamada();
 Parametro* ultimoRetorno();
 
@@ -32,11 +36,11 @@ void asignar(t_puntero, t_valor_variable);
 t_puntero alocar(t_valor_variable);
 
 
-void assertDefinirVariable(t_nombre_variable);
-void assertObtenerPosicion(t_nombre_variable);
-void assertDereferenciar(t_puntero);
+t_puntero assertDefinirVariable(t_nombre_variable);
+t_puntero assertObtenerPosicion(t_nombre_variable);
+t_valor_variable assertDereferenciar(t_puntero);
 void assertAsignar(t_puntero, t_valor_variable);
-void assertMalloc(t_valor_variable);
+t_puntero assertMalloc(t_valor_variable);
 
 
 #endif //ANSISOP_PARSER_PARSERUTILS_H

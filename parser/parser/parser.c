@@ -99,7 +99,7 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		//MALLOC POSICION CANTIDAD
 		char **operation = string_split(linea + strlen(TEXT_MALLOC), " ");
 		t_puntero value = AnSISOP_funciones_kernel->AnSISOP_alocar( _operar(operation[1], AnSISOP_funciones) );
-		AnSISOP_funciones->AnSISOP_asignar(value, _obtenerPosicion(operation[0], AnSISOP_funciones) );
+		AnSISOP_funciones->AnSISOP_asignar(_obtenerPosicion(operation[0], AnSISOP_funciones), value);
 		free(operation);
 	} else if( _esLlamadaFuncion(linea) ){
 		//RETORNO <- ETIQUETA PARAMETROS
