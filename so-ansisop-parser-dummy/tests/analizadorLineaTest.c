@@ -4,7 +4,7 @@
 
 AnSISOP_funciones *funciones = NULL;
 AnSISOP_kernel *kernel = NULL;
-bool imprimirEnPantalla = false;
+bool imprimirEnPantalla = true;
 
 context (parser) {
 
@@ -17,6 +17,8 @@ context (parser) {
         funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
         funciones->AnSISOP_dereferenciar = dereferenciar;
         funciones->AnSISOP_asignar = asignar;
+        funciones->AnSISOP_imprimir = imprimir;
+        funciones->AnSISOP_imprimirLiteral = imprimirLiteral;
 
         kernel->AnSISOP_alocar = alocar;
         kernel->AnSISOP_liberar = liberar;
@@ -29,14 +31,14 @@ context (parser) {
     } end
 
     describe("Si al parser") {
-        it("definicion de variables") {
+        skip("definicion de variables") {
             analizadorLinea("variables x, a, g", funciones, kernel);
                 assertDefinirVariable('x');
                 assertDefinirVariable('a');
                 assertDefinirVariable('g');
         } end
 
-         it("asignacion de variables") {
+         skip("asignacion de variables") {
             analizadorLinea("x = a+3", funciones, kernel);
                 t_puntero posicionA = assertObtenerPosicion('a');
                 t_valor_variable valorA = assertDereferenciar(posicionA);
@@ -44,17 +46,53 @@ context (parser) {
                 assertAsignar(posicionX, valorA+3);
         } end
 
-        it("alocar") {
+        skip("alocar") {
             analizadorLinea("alocar x 6666 ", funciones, kernel);
                 t_puntero punteroAlocar = assertMalloc(6666);
                 t_puntero posicionX = assertObtenerPosicion('x');
                 assertAsignar(posicionX, punteroAlocar);
         } end
 
-        it("liberar") {
+        skip("liberar") {
             analizadorLinea("liberar x", funciones, kernel);
                 t_puntero posicionX = assertObtenerPosicion('x');
                 assertLiberar(posicionX);
+        } end
+
+        skip("imprimir un valor") {
+            analizadorLinea("prints n x+53-&b", funciones, kernel);
+                t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
+                t_puntero posicionB = assertObtenerPosicion('b');
+                assertImprimir(valorX+53-posicionB);
+        } end
+
+        skip("imprimir un literal") {
+            analizadorLinea("prints l Holitas", funciones, kernel);
+                assertImprimirLiteral("Holitas");
+        } end
+
+        it("imprimir un string en memoria") {
+            //setup un dereferenciar de mentira
+
+            funciones->AnSISOP_obtenerPosicionVariable = ({
+                t_puntero __obtenerDeMentira(t_nombre_variable _){
+                    return 0;
+                } __obtenerDeMentira; });
+            funciones->AnSISOP_dereferenciar = ({
+                t_valor_variable __dereferenciarMentira(t_puntero puntero){
+                    char stringEnMemoria[] = { 'H', 'o', 'l', 'a', '\0' };
+                    return stringEnMemoria[puntero];
+                } __dereferenciarMentira; });
+
+            analizadorLinea("prints s x", funciones, kernel);
+                assertImprimirLiteral("H");
+                assertImprimirLiteral("o");
+                assertImprimirLiteral("l");
+                assertImprimirLiteral("a");
+
+            //Rollback
+            funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
+            funciones->AnSISOP_dereferenciar = dereferenciar;
         } end
     } end
 

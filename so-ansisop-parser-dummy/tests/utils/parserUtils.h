@@ -33,6 +33,8 @@ t_puntero definirVariable(t_nombre_variable);
 t_puntero obtenerPosicionVariable(t_nombre_variable);
 t_valor_variable dereferenciar(t_puntero);
 void asignar(t_puntero, t_valor_variable);
+void imprimir(t_valor_variable valor);
+void imprimirLiteral(char *texto);
 t_puntero alocar(t_valor_variable);
 void liberar(t_puntero);
 
@@ -41,8 +43,10 @@ t_puntero assertDefinirVariable(t_nombre_variable);
 t_puntero assertObtenerPosicion(t_nombre_variable);
 t_valor_variable assertDereferenciar(t_puntero);
 void assertAsignar(t_puntero, t_valor_variable);
+void assertImprimir(t_valor_variable);
+void assertImprimirLiteral(char*);
 t_puntero assertMalloc(t_valor_variable);
-void assertLiberar(t_puntero puntero);
+void assertLiberar(t_puntero);
 
 
 #endif //ANSISOP_PARSER_PARSERUTILS_H

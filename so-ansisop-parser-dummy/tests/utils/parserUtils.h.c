@@ -96,6 +96,16 @@ void asignar(t_puntero puntero, t_valor_variable valor_variable){
     queue_push(llamadas, crearLlamada("asignar", 2, puntero, valor_variable));
 }
 
+void imprimir(t_valor_variable valor){
+    log_trace(logger, "Imprimir variable [%d]", valor);
+    queue_push(llamadas, crearLlamada("imprimir", 1, valor));
+}
+
+void imprimirLiteral(char *texto){
+    log_trace(logger, "Imprimir texto [%s]", texto);
+    queue_push(llamadas, crearLlamada("imprimirLiteral", 1, strdup(texto)));
+}
+
 
 t_puntero alocar(t_valor_variable espacio){
     log_trace(logger, "Reserva [%d] espacio", espacio);
@@ -141,6 +151,20 @@ void assertAsignar(t_puntero puntero, t_valor_variable valor){
     should_int(llamada->parametros[0].nombre_variable) be equal to(puntero);
     should_int(llamada->parametros[1].puntero) be equal to(valor);
 }
+
+void assertImprimir(t_valor_variable valor){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("imprimir");
+    should_int(llamada->parametros[0].valor_variable) be equal to(valor);
+}
+
+void assertImprimirLiteral(char* texto){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("imprimirLiteral");
+    should_string(llamada->parametros[0].puntero) be equal to(texto);
+    free(llamada->parametros[0].puntero);
+}
+
 
 t_puntero assertMalloc(t_valor_variable espacio){
     Llamada* llamada = ultimaLlamada();

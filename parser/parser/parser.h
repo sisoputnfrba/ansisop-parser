@@ -196,7 +196,7 @@
 		 *
 		 * Envía valor_mostrar al Kernel, para que termine siendo mostrado en la consola del Programa en ejecución.
 		 *
-		 * @sintax	TEXT_PRINT (print )
+		 * @sintax	TEXT_PRINT_NUMBER (print )
 		 * @param	valor_mostrar	Dato que se quiere imprimir
 		 * @return	void
 		 */
@@ -207,11 +207,11 @@
 		 *
 		 * Envía mensaje al Kernel, para que termine siendo mostrado en la consola del Programa en ejecución. mensaje no posee parámetros, secuencias de escape, variables ni nada.
 		 *
-		 * @sintax TEXT_PRINT_TEXT (textPrint )
+		 * @sintax TEXT_PRINT_LITERAL (textPrint )
 		 * @param	texto	Texto a imprimir
 		 * @return void
 		 */
-		void (*AnSISOP_imprimirTexto)(char* texto);
+		void (*AnSISOP_imprimirLiteral)(char* texto);
 
 		/*
 		 *	ENTRADA y SALIDA
