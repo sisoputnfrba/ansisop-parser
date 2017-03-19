@@ -108,6 +108,11 @@ t_puntero alocar(t_valor_variable espacio){
     return retorno->puntero;
 }
 
+void liberar(t_puntero puntero){
+    log_trace(logger, "Reserva [%p] espacio", puntero);
+
+    queue_push(llamadas, crearLlamada("liberar", 1, puntero));
+}
 
 t_puntero assertDefinirVariable(t_nombre_variable valor){
     Llamada* llamada = ultimaLlamada();
@@ -142,4 +147,10 @@ t_puntero assertMalloc(t_valor_variable espacio){
     should_string(llamada->nombre) be equal to("alocar");
     should_int(llamada->parametros[0].valor_variable) be equal to(espacio);
     return ultimoRetorno()->puntero;
+}
+
+void assertLiberar(t_puntero puntero){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("liberar");
+    should_int(llamada->parametros[0].puntero) be equal to(puntero);
 }

@@ -19,6 +19,7 @@ context (parser) {
         funciones->AnSISOP_asignar = asignar;
 
         kernel->AnSISOP_alocar = alocar;
+        kernel->AnSISOP_liberar = liberar;
     };
 
     setup();
@@ -48,6 +49,12 @@ context (parser) {
                 t_puntero punteroAlocar = assertMalloc(6666);
                 t_puntero posicionX = assertObtenerPosicion('x');
                 assertAsignar(posicionX, punteroAlocar);
+        } end
+
+        it("liberar") {
+            analizadorLinea("liberar x", funciones, kernel);
+                t_puntero posicionX = assertObtenerPosicion('x');
+                assertLiberar(posicionX);
         } end
     } end
 

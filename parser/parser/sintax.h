@@ -40,6 +40,7 @@
 	#define TEXT_SIGNAL "signal "
 
 	#define TEXT_MALLOC "alocar"
+	#define TEXT_FREE "liberar"
 
 	#define TEXT_ASSIGNATION "="
 	#define TEXT_SUM "+"
