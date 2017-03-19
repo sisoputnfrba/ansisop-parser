@@ -17,7 +17,7 @@ context (parser) {
         funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
         funciones->AnSISOP_dereferenciar = dereferenciar;
         funciones->AnSISOP_asignar = asignar;
-        funciones->AnSISOP_imprimir = imprimir;
+        funciones->AnSISOP_imprimirValor = imprimir;
         funciones->AnSISOP_imprimirLiteral = imprimirLiteral;
 
         kernel->AnSISOP_alocar = alocar;

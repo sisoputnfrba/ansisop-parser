@@ -192,7 +192,7 @@
 		void (*AnSISOP_retornar)(t_valor_variable retorno);
 
 		/*
-		 * IMPRIMIR
+		 * IMPRIMIR VALOR
 		 *
 		 * Envía valor_mostrar al Kernel, para que termine siendo mostrado en la consola del Programa en ejecución.
 		 *
@@ -200,12 +200,13 @@
 		 * @param	valor_mostrar	Dato que se quiere imprimir
 		 * @return	void
 		 */
-		void (*AnSISOP_imprimir)(t_valor_variable valor_mostrar);
+		void (*AnSISOP_imprimirValor)(t_valor_variable valor_mostrar);
 
 		/*
-		 * IMPRIMIR TEXTO
+		 * IMPRIMIR LITERAL
 		 *
-		 * Envía mensaje al Kernel, para que termine siendo mostrado en la consola del Programa en ejecución. mensaje no posee parámetros, secuencias de escape, variables ni nada.
+		 * Envía mensaje al Kernel, para que termine siendo mostrado en la consola del Programa en ejecución.
+		 * El mensaje no posee parámetros, secuencias de escape, variables ni nada.
 		 *
 		 * @sintax TEXT_PRINT_LITERAL (textPrint )
 		 * @param	texto	Texto a imprimir
