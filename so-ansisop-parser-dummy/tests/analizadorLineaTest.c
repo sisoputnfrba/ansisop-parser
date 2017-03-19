@@ -4,7 +4,7 @@
 
 AnSISOP_funciones *funciones = NULL;
 AnSISOP_kernel *kernel = NULL;
-bool imprimirEnPantalla = true;
+bool imprimirEnPantalla = false;
 
 context (parser) {
 
@@ -31,14 +31,14 @@ context (parser) {
     } end
 
     describe("Si al parser") {
-        skip("definicion de variables") {
+        it("definicion de variables") {
             analizadorLinea("variables x, a, g", funciones, kernel);
                 assertDefinirVariable('x');
                 assertDefinirVariable('a');
                 assertDefinirVariable('g');
         } end
 
-         skip("asignacion de variables") {
+         it("asignacion de variables") {
             analizadorLinea("x = a+3", funciones, kernel);
                 t_puntero posicionA = assertObtenerPosicion('a');
                 t_valor_variable valorA = assertDereferenciar(posicionA);
@@ -46,27 +46,27 @@ context (parser) {
                 assertAsignar(posicionX, valorA+3);
         } end
 
-        skip("alocar") {
+        it("alocar") {
             analizadorLinea("alocar x 6666 ", funciones, kernel);
                 t_puntero punteroAlocar = assertMalloc(6666);
                 t_puntero posicionX = assertObtenerPosicion('x');
                 assertAsignar(posicionX, punteroAlocar);
         } end
 
-        skip("liberar") {
+        it("liberar") {
             analizadorLinea("liberar x", funciones, kernel);
                 t_puntero posicionX = assertObtenerPosicion('x');
                 assertLiberar(posicionX);
         } end
 
-        skip("imprimir un valor") {
+        it("imprimir un valor") {
             analizadorLinea("prints n x+53-&b", funciones, kernel);
                 t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
                 t_puntero posicionB = assertObtenerPosicion('b');
                 assertImprimir(valorX+53-posicionB);
         } end
 
-        skip("imprimir un literal") {
+        it("imprimir un literal") {
             analizadorLinea("prints l Holitas", funciones, kernel);
                 assertImprimirLiteral("Holitas");
         } end
