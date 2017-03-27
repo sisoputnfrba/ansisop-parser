@@ -15,6 +15,7 @@
         t_nombre_variable nombre_variable;
         t_puntero puntero;
         t_valor_variable valor_variable;
+        t_nombre_etiqueta nombre_etiqueta;
     } Parametro;
 
     typedef struct {
@@ -35,6 +36,7 @@ t_valor_variable dereferenciar(t_puntero);
 void asignar(t_puntero, t_valor_variable);
 void imprimir(t_valor_variable valor);
 void imprimirLiteral(char *texto);
+void irAlLabel(t_nombre_etiqueta nombre_etiqueta);
 t_puntero alocar(t_valor_variable);
 void liberar(t_puntero);
 
@@ -45,6 +47,7 @@ t_valor_variable assertDereferenciar(t_puntero);
 void assertAsignar(t_puntero, t_valor_variable);
 void assertImprimir(t_valor_variable);
 void assertImprimirLiteral(char*);
+void assertIrAlLabel(t_nombre_etiqueta nombre_etiqueta);
 t_puntero assertMalloc(t_valor_variable);
 void assertLiberar(t_puntero);
 

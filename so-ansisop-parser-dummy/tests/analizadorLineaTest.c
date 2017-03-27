@@ -19,6 +19,7 @@ context (parser) {
         funciones->AnSISOP_asignar = asignar;
         funciones->AnSISOP_imprimirValor = imprimir;
         funciones->AnSISOP_imprimirLiteral = imprimirLiteral;
+        funciones->AnSISOP_irAlLabel = irAlLabel;
 
         kernel->AnSISOP_alocar = alocar;
         kernel->AnSISOP_liberar = liberar;
@@ -31,6 +32,7 @@ context (parser) {
     } end
 
     describe("Si al parser") {
+
         it("definicion de variables") {
             analizadorLinea("variables x, a, g", funciones, kernel);
                 assertDefinirVariable('x');
@@ -44,6 +46,11 @@ context (parser) {
                 t_valor_variable valorA = assertDereferenciar(posicionA);
                 t_puntero posicionX = assertObtenerPosicion('x');
                 assertAsignar(posicionX, valorA+3);
+        } end
+
+        it("ir a etiqueta") {
+            analizadorLinea("goto inicio", funciones, kernel);
+            assertIrAlLabel("inicio");
         } end
 
         it("alocar") {
