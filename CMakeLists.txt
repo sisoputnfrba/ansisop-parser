@@ -3,4 +3,4 @@ project(ansisop_parser)
 
 add_subdirectory(cspec)
 add_subdirectory(parser)
-add_subdirectory(so-ansisop-parser-dummy)
+add_subdirectory(parser-tests)
