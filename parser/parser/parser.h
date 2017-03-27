@@ -250,6 +250,29 @@
 		 * @return	void
 		 */
 		void (*AnSISOP_signal)(t_nombre_semaforo identificador_semaforo);
+
+		/*
+		 * RESERVAR
+		 *
+		 * Informa al kernel que reserve en el Heap una cantidad de memoria acorde al espacio recibido como parametro
+		 *
+		 * @sintax	TEST_MALLOC space
+		 * @param	valor_variable Cantidad de espacio
+		 * @return	puntero a donde esta reservada la memoria
+		 */
+		t_puntero (*AnSISOP_alocar)(t_valor_variable espacio);
+
+		/*
+		 * LIBERAR
+		 *
+		 * Informa al kernel que libera la memoria previamente reservada con RESERVAR.
+		 * Solo se podra liberar memoria previamente asignada con RESERVAR.
+		 *
+		 * @sintax	TEST_FREE variable
+		 * @param	puntero Inicio de espacio de memoria a liberar (previamente retornado por RESERVAR)
+		 * @return	void
+		 */
+		void (*AnSISOP_liberar)(t_puntero puntero);
 	} AnSISOP_kernel;
 
 	void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel);

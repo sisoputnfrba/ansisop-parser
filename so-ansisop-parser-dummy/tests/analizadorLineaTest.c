@@ -4,22 +4,30 @@
 
 AnSISOP_funciones *funciones = NULL;
 AnSISOP_kernel *kernel = NULL;
+bool imprimirEnPantalla = false;
 
 context (parser) {
 
     void setup(){
         funciones = malloc(sizeof(AnSISOP_funciones));
         kernel = malloc(sizeof(AnSISOP_kernel));
-        parserUtilSetup();
+        parserUtilSetup(tmpnam(NULL), imprimirEnPantalla);
 
         funciones->AnSISOP_definirVariable = definirVariable;
         funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
         funciones->AnSISOP_dereferenciar = dereferenciar;
         funciones->AnSISOP_asignar = asignar;
         funciones->AnSISOP_irAlLabel = irAlLabel;
+
+        kernel->AnSISOP_alocar = alocar;
+        kernel->AnSISOP_liberar = liberar;
     };
 
     setup();
+
+    before {
+        limpiarElContextoDeEjecucion();
+    } end
 
     describe("Si al parser") {
 
@@ -30,19 +38,34 @@ context (parser) {
                 assertDefinirVariable('g');
         } end
 
-        it("asignacion de variables") {
+         it("asignacion de variables") {
             analizadorLinea("x = a+3", funciones, kernel);
-                assertObtenerPosicion('a');
-                assertDereferenciar(ultimoRetorno()->puntero);
-                assertObtenerPosicion('x');
-                t_valor_variable acumulador = ultimoRetorno()->valor_variable;
-                assertAsignar(ultimoRetorno()->puntero, acumulador+3);
+                t_puntero posicionA = assertObtenerPosicion('a');
+                t_valor_variable valorA = assertDereferenciar(posicionA);
+                t_puntero posicionX = assertObtenerPosicion('x');
+                assertAsignar(posicionX, valorA+3);
         } end
 
         it("ir a etiqueta") {
             analizadorLinea("goto inicio", funciones, kernel);
             assertIrAlLabel("inicio");
         } end
+
+        it("alocar") {
+            analizadorLinea("alocar x 6666 ", funciones, kernel);
+                t_puntero punteroAlocar = assertMalloc(6666);
+                t_puntero posicionX = assertObtenerPosicion('x');
+                assertAsignar(posicionX, punteroAlocar);
+        } end
+
+        it("liberar") {
+            analizadorLinea("liberar x", funciones, kernel);
+                t_puntero posicionX = assertObtenerPosicion('x');
+                assertLiberar(posicionX);
+        } end
+
     } end
+
+    parserUtilTearDown();
 
 }
