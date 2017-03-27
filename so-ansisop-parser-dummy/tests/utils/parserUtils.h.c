@@ -40,7 +40,7 @@ Llamada* crearLlamada(char* nombre, int cantidadParametros, ...){
 
     va_start (parametrosVa , cantidadParametros);
     for (int x = 0; x < cantidadParametros; x++ ){
-        parametros[x] = va_arg ( parametrosVa, Parametro);
+        parametros[x] = va_arg (parametrosVa, Parametro);
     }
     va_end ( parametrosVa );
 
@@ -96,6 +96,10 @@ void asignar(t_puntero puntero, t_valor_variable valor_variable){
     queue_push(llamadas, crearLlamada("asignar", 2, puntero, valor_variable));
 }
 
+void irAlLabel(t_nombre_etiqueta nombre_etiqueta) {
+    log_trace(logger, "Ir al Label [%s]", nombre_etiqueta);
+    queue_push(llamadas, crearLlamada("irAlLabel", 1, strdup(nombre_etiqueta)));
+}
 
 t_puntero alocar(t_valor_variable espacio){
     log_trace(logger, "Reserva [%d] espacio", espacio);
@@ -118,6 +122,8 @@ t_puntero assertDefinirVariable(t_nombre_variable valor){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("definirVariable");
     should_char(llamada->parametros[0].nombre_variable) be equal to(valor);
+    free(llamada->parametros);
+    free(llamada);
     return ultimoRetorno()->puntero;
 }
 
@@ -125,6 +131,8 @@ t_puntero assertObtenerPosicion(t_nombre_variable nombre_variable){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("obtenerPosicionVariable");
     should_char(llamada->parametros[0].nombre_variable) be equal to(nombre_variable);
+    free(llamada->parametros);
+    free(llamada);
     return ultimoRetorno()->puntero;
 }
 
@@ -132,6 +140,8 @@ t_valor_variable assertDereferenciar(t_puntero puntero){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("dereferenciar");
     should_int(llamada->parametros[0].puntero) be equal to(puntero);
+    free(llamada->parametros);
+    free(llamada);
     return ultimoRetorno()->valor_variable;
 }
 
@@ -140,12 +150,24 @@ void assertAsignar(t_puntero puntero, t_valor_variable valor){
     should_string(llamada->nombre) be equal to("asignar");
     should_int(llamada->parametros[0].nombre_variable) be equal to(puntero);
     should_int(llamada->parametros[1].puntero) be equal to(valor);
+    free(llamada->parametros);
+    free(llamada);
+}
+
+void assertIrAlLabel(t_nombre_etiqueta nombre_etiqueta) {
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("irAlLabel");
+    should_string(llamada->parametros[0].nombre_etiqueta) be equal to(nombre_etiqueta);
+    free(llamada->parametros);
+    free(llamada);
 }
 
 t_puntero assertMalloc(t_valor_variable espacio){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("alocar");
     should_int(llamada->parametros[0].valor_variable) be equal to(espacio);
+    free(llamada->parametros);
+    free(llamada);
     return ultimoRetorno()->puntero;
 }
 
@@ -153,4 +175,6 @@ void assertLiberar(t_puntero puntero){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("liberar");
     should_int(llamada->parametros[0].puntero) be equal to(puntero);
+    free(llamada->parametros);
+    free(llamada);
 }
