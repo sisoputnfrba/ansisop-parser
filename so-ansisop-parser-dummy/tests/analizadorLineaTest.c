@@ -17,6 +17,8 @@ context (parser) {
         funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
         funciones->AnSISOP_dereferenciar = dereferenciar;
         funciones->AnSISOP_asignar = asignar;
+        funciones->AnSISOP_imprimirValor = imprimir;
+        funciones->AnSISOP_imprimirLiteral = imprimirLiteral;
         funciones->AnSISOP_irAlLabel = irAlLabel;
 
         kernel->AnSISOP_alocar = alocar;
@@ -64,6 +66,41 @@ context (parser) {
                 assertLiberar(posicionX);
         } end
 
+        it("imprimir un valor") {
+            analizadorLinea("prints n x+53-&b", funciones, kernel);
+                t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
+                t_puntero posicionB = assertObtenerPosicion('b');
+                assertImprimir(valorX+53-posicionB);
+        } end
+
+        it("imprimir un literal") {
+            analizadorLinea("prints l Holitas", funciones, kernel);
+                assertImprimirLiteral("Holitas");
+        } end
+
+        it("imprimir un string en memoria") {
+            //setup un dereferenciar de mentira
+
+            funciones->AnSISOP_obtenerPosicionVariable = ({
+                t_puntero __obtenerDeMentira(t_nombre_variable _){
+                    return 0;
+                } __obtenerDeMentira; });
+            funciones->AnSISOP_dereferenciar = ({
+                t_valor_variable __dereferenciarMentira(t_puntero puntero){
+                    char stringEnMemoria[] = { 'H', 'o', 'l', 'a', '\0' };
+                    return stringEnMemoria[puntero];
+                } __dereferenciarMentira; });
+
+            analizadorLinea("prints s x", funciones, kernel);
+                assertImprimirLiteral("H");
+                assertImprimirLiteral("o");
+                assertImprimirLiteral("l");
+                assertImprimirLiteral("a");
+
+            //Rollback
+            funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
+            funciones->AnSISOP_dereferenciar = dereferenciar;
+        } end
     } end
 
     parserUtilTearDown();
