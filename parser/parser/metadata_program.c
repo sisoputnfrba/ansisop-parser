@@ -56,12 +56,6 @@ t_metadata_program* metadata_desde_literal(const char* literal){
 	return ret;
 }
 
-t_metadata_program* metadatada_desde_literal(const char* literal){
-	puts("DEPRECATED: la funcion metadatada_desde_literal tenia un error de tipeo y esta deprecada.");
-	puts("DEPRECATED: deberia llamarse a la funcion metadata_desde_literal en cambio.");
-	return metadata_desde_literal(literal);
-}
-
 void metadata_destruir(t_metadata_program* victima){
 	free(victima->etiquetas);
 	free(victima->instrucciones_serializado);

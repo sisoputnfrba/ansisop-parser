@@ -40,32 +40,3 @@ Por ejemplo:
 ```c
 #include <parser/metadata_program.h>
 ```
-
-## Ejemplo de implementación
-1. `cd so-ansisop-parser-dummy`: Ir al directorio del ejemplo
-2. `make all`: Compilar el ejemplo
-3. `ls build/`: Revisar que exista el archivo *so-ansisop-parser-dummy* dentro del directorio `build/`
-4. `./build/so-ansisop-parser-dummy`: Ejecutar el programa recien compilado
-
-Se espera el siguiente output por pantalla:
-```
-Ejecutando 'a = b + 12'
-Obtener posicion de b
-Dereferenciar 16 y su valor es: 20
-Obtener posicion de a
-Asignando en 16 el valor 32
-================
-Ejecutando 'variables a, b, c'
-definir la variable a
-definir la variable b
-definir la variable c
-================
-Ejecutando 'print b'
-Obtener posicion de b
-Dereferenciar 16 y su valor es: 20
-Imprimir 20
-================
-Ejecutando 'textPrint foo
-'ImprimirTexto: foo
-================
-```

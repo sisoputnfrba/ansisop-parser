@@ -191,18 +191,6 @@
 		 */
 		void (*AnSISOP_retornar)(t_valor_variable retorno);
 
-		/*
-		 * NUMBER_TO_ASCII
-		 *
-		 * Convierte el contenido de un valor numerico a ASCII para luego ser impreso.
-		 *
-		 * @JOACO La idea de esto es que pueda ser llamado para la funcion writeNumber que imprime numeros en un archivo. Confirma que tan viable es, sino hay que crear una syscall con la misma firma que Write, pero que imprima numeros en uan variable y no un offset a partir de un puntero.
-		 * 
-		 * @sintax	WRITE_NUMBER (writeNumber ) 	Convierte este numero a un puntero y luego llama a la funcion Write
-		 * @param	number		 		Numero a convertir
-		 * @return	t_puntero 			Puntero que contiene el String convertido
-		 */
-		t_puntero (*AnSISOP_number_to_ascii)(t_valor_variable numero);
 
 
 	//Operaciones de Kernel
@@ -232,52 +220,53 @@
 		void (*AnSISOP_signal)(t_nombre_semaforo identificador_semaforo);
 
 		/*
-		 * MALLOC
+		 * RESERVAR
 		 *
-		 * Informa al Kernel que el proceso requiere que se reserven size bytes de memoria dinamica para el mismo.
+		 * Informa al kernel que reserve en el Heap una cantidad de memoria acorde al espacio recibido como parametro
 		 *
-		 * @syntax 	MALLOC (malloc )
-		 * @param	memoria_requerida	Cantidad de bytes que el programa requiere reservar.
-		 * @return	Direccion de memoria en la cual comienza el espacio reservado.
+		 * @sintax	TEXT_MALLOC espacio
+		 * @param	valor_variable Cantidad de espacio
+		 * @return	puntero a donde esta reservada la memoria
 		 */
-		t_puntero (*AnSISOP_malloc)(t_valor_variable memoria_requerida);
+		t_puntero (*AnSISOP_alocar)(t_valor_variable espacio);
 
 		/*
-		 * FREE
+		 * LIBERAR
 		 *
-		 * Informa al Kernel que el proceso requiere que se liberen los bytes reservados por malloc. 
+		 * Informa al kernel que libera la memoria previamente reservada con RESERVAR.
+		 * Solo se podra liberar memoria previamente asignada con RESERVAR.
 		 *
-		 * @syntax 	MALLOC (malloc )
-		 * @param	puntero		Puntero que contiene la posicion de inicio del bloque a liberar.
+		 * @sintax	TEST_FREE variable
+		 * @param	puntero Inicio de espacio de memoria a liberar (previamente retornado por RESERVAR)
 		 * @return	void
 		 */
-		void (*AnSISOP_free)(t_puntero puntero);
+		void (*AnSISOP_liberar)(t_puntero puntero);
 
 		/*
-		 * OPEN
+		 * ABRIR_ARCHIVO
 		 *
 		 * Informa al Kernel que el proceso requiere que se abra un archivo.
 		 *
-		 * @syntax 	OPEN (open )
-		 * @param	path		Ruta al archivo a abrir.	
+		 * @syntax 	TEXT_ABRIR ruta flags
+		 * @param	ruta		Ruta al archivo a abrir.
 		 * @param	flags		String que contiene los permisos con los que se abre el archivo.
-		 * @return	t_file_descriptor	El valor del FD abierto por el sistema.
+		 * @return	t_descriptor_archivo	El valor del FD abierto por el sistema.
 		 */
-		t_file_descriptor (*AnSISOP_open)(t_path path, t_flags flags);
+		t_descriptor_archivo (*AnSISOP_open)(t_path path, t_flags flags);
 
 		/*
-		 * DELETE
+		 * BORRAR_ARCHIVO
 		 *
 		 * Informa al Kernel que el proceso requiere que se borre un archivo.
 		 *
-		 * @syntax 	DELETE (delete )
-		 * @param	path		Ruta al archivo a abrir.	
+		 * @syntax 	TEXT_DELETE path
+		 * @param	path		Ruta al archivo a abrir.
 		 * @return	void
 		 */
-		t_file_descriptor (*AnSISOP_open)(t_path path);
+		void (*AnSISOP_borrar)(t_path path);
 
 		/*
-		 * CLOSE
+		 * CERRAR_ARCHIVO
 		 *
 		 * Informa al Kernel que el proceso requiere que se cierre un archivo.
 		 *
@@ -285,18 +274,18 @@
 		 * @param	file_descriptor		File Descriptor del archivo abierto.
 		 * @return	void
 		 */
-		void (*AnSISOP_close)(t_file_descriptor file_descriptor);
+		void (*AnSISOP_cerrar)(t_file_descriptor file_descriptor);
 
 
 		/*
-		 * WRITE 
+		 * WRITE
 		 *
 		 * Informa al Kernel que el proceso requiere que se escriba un archivo.
 		 *
 		 * @syntax 	WRITE (write )
 		 * @param	file_descriptor		File Descriptor del archivo abierto.
 		 * @param	data			Puntero que indica donde comienza la informacion a ser copiada.
-		 * @param	size			Tamanio de la informacion a enviar. Debe ser un offset valido de putero. 
+		 * @param	size			Tamanio de la informacion a enviar. Debe ser un offset valido de putero.
 		 * @return	void
 		 */
 		void (*AnSISOP_write)(t_file_descriptor file_descriptor, t_puntero data, t_valor_variable size);
