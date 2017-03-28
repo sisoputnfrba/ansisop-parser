@@ -192,38 +192,18 @@
 		void (*AnSISOP_retornar)(t_valor_variable retorno);
 
 		/*
-		 * IMPRIMIR
+		 * NUMBER_TO_ASCII
 		 *
-		 * Envía valor_mostrar al Kernel, para que termine siendo mostrado en la consola del Programa en ejecución.
+		 * Convierte el contenido de un valor numerico a ASCII para luego ser impreso.
 		 *
-		 * @sintax	TEXT_PRINT (print )
-		 * @param	valor_mostrar	Dato que se quiere imprimir
-		 * @return	void
+		 * @JOACO La idea de esto es que pueda ser llamado para la funcion writeNumber que imprime numeros en un archivo. Confirma que tan viable es, sino hay que crear una syscall con la misma firma que Write, pero que imprima numeros en uan variable y no un offset a partir de un puntero.
+		 * 
+		 * @sintax	WRITE_NUMBER (writeNumber ) 	Convierte este numero a un puntero y luego llama a la funcion Write
+		 * @param	number		 		Numero a convertir
+		 * @return	t_puntero 			Puntero que contiene el String convertido
 		 */
-		void (*AnSISOP_imprimir)(t_valor_variable valor_mostrar);
+		t_puntero (*AnSISOP_number_to_ascii)(t_valor_variable numero);
 
-		/*
-		 * IMPRIMIR TEXTO
-		 *
-		 * Envía mensaje al Kernel, para que termine siendo mostrado en la consola del Programa en ejecución. mensaje no posee parámetros, secuencias de escape, variables ni nada.
-		 *
-		 * @sintax TEXT_PRINT_TEXT (textPrint )
-		 * @param	texto	Texto a imprimir
-		 * @return void
-		 */
-		void (*AnSISOP_imprimirTexto)(char* texto);
-
-		/*
-		 *	ENTRADA y SALIDA
-		 *
-		 *
-		 *	@sintax TEXT_IO (io )
-		 *	@param	dispositivo	Nombre del dispositivo a pedir
-		 *	@param	tiempo	Tiempo que se necesitara el dispositivo
-		 *	@return	void
-		 */
-		void (*AnSISOP_entradaSalida)(t_nombre_dispositivo dispositivo, int tiempo);
-	} AnSISOP_funciones;
 
 	//Operaciones de Kernel
 	typedef struct {
@@ -250,6 +230,78 @@
 		 * @return	void
 		 */
 		void (*AnSISOP_signal)(t_nombre_semaforo identificador_semaforo);
+
+		/*
+		 * MALLOC
+		 *
+		 * Informa al Kernel que el proceso requiere que se reserven size bytes de memoria dinamica para el mismo.
+		 *
+		 * @syntax 	MALLOC (malloc )
+		 * @param	memoria_requerida	Cantidad de bytes que el programa requiere reservar.
+		 * @return	Direccion de memoria en la cual comienza el espacio reservado.
+		 */
+		t_puntero (*AnSISOP_malloc)(t_valor_variable memoria_requerida);
+
+		/*
+		 * FREE
+		 *
+		 * Informa al Kernel que el proceso requiere que se liberen los bytes reservados por malloc. 
+		 *
+		 * @syntax 	MALLOC (malloc )
+		 * @param	puntero		Puntero que contiene la posicion de inicio del bloque a liberar.
+		 * @return	void
+		 */
+		void (*AnSISOP_free)(t_puntero puntero);
+
+		/*
+		 * OPEN
+		 *
+		 * Informa al Kernel que el proceso requiere que se abra un archivo.
+		 *
+		 * @syntax 	OPEN (open )
+		 * @param	path		Ruta al archivo a abrir.	
+		 * @param	flags		String que contiene los permisos con los que se abre el archivo.
+		 * @return	t_file_descriptor	El valor del FD abierto por el sistema.
+		 */
+		t_file_descriptor (*AnSISOP_open)(t_path path, t_flags flags);
+
+		/*
+		 * DELETE
+		 *
+		 * Informa al Kernel que el proceso requiere que se borre un archivo.
+		 *
+		 * @syntax 	DELETE (delete )
+		 * @param	path		Ruta al archivo a abrir.	
+		 * @return	void
+		 */
+		t_file_descriptor (*AnSISOP_open)(t_path path);
+
+		/*
+		 * CLOSE
+		 *
+		 * Informa al Kernel que el proceso requiere que se cierre un archivo.
+		 *
+		 * @syntax 	CLOSE (close )
+		 * @param	file_descriptor		File Descriptor del archivo abierto.
+		 * @return	void
+		 */
+		void (*AnSISOP_close)(t_file_descriptor file_descriptor);
+
+
+		/*
+		 * WRITE 
+		 *
+		 * Informa al Kernel que el proceso requiere que se escriba un archivo.
+		 *
+		 * @syntax 	WRITE (write )
+		 * @param	file_descriptor		File Descriptor del archivo abierto.
+		 * @param	data			Puntero que indica donde comienza la informacion a ser copiada.
+		 * @param	size			Tamanio de la informacion a enviar. Debe ser un offset valido de putero. 
+		 * @return	void
+		 */
+		void (*AnSISOP_write)(t_file_descriptor file_descriptor, t_puntero data, t_valor_variable size);
+
+
 	} AnSISOP_kernel;
 
 	void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel);
