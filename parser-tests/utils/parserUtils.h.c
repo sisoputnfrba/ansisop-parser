@@ -57,38 +57,34 @@ Parametro* crearRetorno(){
     return ret;
 }
 
+#define CON_RETORNO_PUNTERO     CON_RETORNO("%p", puntero)
+#define CON_RETORNO_VALOR     CON_RETORNO("%d", valor_variable)
+
+#define CON_RETORNO(FORMATO, TIPO) \
+Parametro *retorno = crearRetorno(); \
+queue_push(retornos, retorno);\
+log_trace(logger, "\tdevuelve [%" FORMATO "]", retorno->TIPO);\
+return retorno->puntero
+
 
 t_puntero definirVariable(t_nombre_variable identificador_variable){
-    log_trace(logger, "Definir variable [%c]", identificador_variable);
-
+    log_trace(logger, "Definir Variable [%c]", identificador_variable);
     queue_push(llamadas, crearLlamada("definirVariable", 1, identificador_variable));
-    Parametro *retorno = crearRetorno();
-    queue_push(retornos, retorno);
-
-    log_trace(logger, "\tdevuelve [%p]", retorno->puntero);
-    return retorno->puntero;
+    CON_RETORNO_PUNTERO;
 };
 
 t_puntero obtenerPosicionVariable(t_nombre_variable nombre_variable){
     log_trace(logger, "Obtener posicion variable [%c]", nombre_variable);
 
     queue_push(llamadas, crearLlamada("obtenerPosicionVariable", 1, nombre_variable));
-    Parametro *retorno = crearRetorno();
-    queue_push(retornos, retorno);
-
-    log_trace(logger, "\tdevuelve [%p]", retorno->puntero);
-    return retorno->puntero;
+    CON_RETORNO_PUNTERO;
 }
 
 t_valor_variable dereferenciar(t_puntero puntero){
     log_trace(logger, "Dereferenciar [%p]", puntero);
 
     queue_push(llamadas, crearLlamada("dereferenciar", 1, puntero));
-    Parametro *retorno = crearRetorno();
-    queue_push(retornos, retorno);
-
-    log_trace(logger, "\tdevuelve [%d]", retorno->valor_variable);
-    return retorno->valor_variable;
+    CON_RETORNO_VALOR;
 }
 
 void asignar(t_puntero puntero, t_valor_variable valor_variable){
@@ -100,6 +96,7 @@ void irAlLabel(t_nombre_etiqueta nombre_etiqueta) {
     log_trace(logger, "Ir al Label [%s]", nombre_etiqueta);
     queue_push(llamadas, crearLlamada("irAlLabel", 1, strdup(nombre_etiqueta)));
 }
+
 void imprimir(t_valor_variable valor){
     log_trace(logger, "Imprimir variable [%d]", valor);
     queue_push(llamadas, crearLlamada("imprimir", 1, valor));
@@ -110,16 +107,11 @@ void imprimirLiteral(char *texto){
     queue_push(llamadas, crearLlamada("imprimirLiteral", 1, strdup(texto)));
 }
 
-
 t_puntero alocar(t_valor_variable espacio){
     log_trace(logger, "Reserva [%d] espacio", espacio);
 
     queue_push(llamadas, crearLlamada("alocar", 1, espacio));
-    Parametro *retorno = crearRetorno();
-    queue_push(retornos, retorno);
-
-    log_trace(logger, "\tdevuelve [%p]", retorno->puntero);
-    return retorno->puntero;
+    CON_RETORNO_PUNTERO;
 }
 
 void liberar(t_puntero puntero){
