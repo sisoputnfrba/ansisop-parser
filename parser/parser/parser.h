@@ -31,7 +31,8 @@
 	//Tipos de datos
 	typedef u_int32_t t_puntero;
 	typedef u_int32_t t_size;
-	typedef u_int32_t t_puntero_instruccion;
+	typedef t_puntero t_puntero_instruccion;
+	typedef t_puntero t_descriptor_archivo;
 
 	typedef char t_nombre_variable;
 	typedef int t_valor_variable;
@@ -39,7 +40,7 @@
 	typedef t_nombre_variable* t_nombre_semaforo;
 	typedef t_nombre_variable* t_nombre_etiqueta;
 	typedef  t_nombre_variable* t_nombre_compartida;
-	typedef  t_nombre_variable* t_nombre_dispositivo;
+	typedef  t_nombre_variable* t_direccion_archivo;
 
 	typedef enum {
 		SIN_ERROR,
@@ -51,6 +52,12 @@
 		FIN_PROGRAMA,
 	} STATUS;
 
+	typedef struct{
+		bool lectura;
+		bool escritura;
+		bool creacion;
+	} t_banderas;
+
 	//Operaciones
 	typedef struct {
 		/*
@@ -61,7 +68,8 @@
 		 * Esta función se invoca una vez por variable, a pesar que este varias veces en una línea.
 		 * Ej: Evaluar "variables a, b, c" llamará tres veces a esta función con los parámetros "a", "b" y "c"
 		 *
-		 * @sintax	TEXT_VARIABLE (variables identificador[,identificador]*)
+		 * @sintax	TEXT_VARIABLE (variables)
+		 * 			-- nota: Al menos un identificador; separado por comas
 		 * @param	identificador_variable	Nombre de variable a definir
 		 * @return	Puntero a la variable recien asignada
 		 */
@@ -132,7 +140,7 @@
 		 *
 		 * Cambia la linea de ejecucion a la correspondiente de la etiqueta buscada.
 		 *
-		 * @sintax	TEXT_GOTO (goto )
+		 * @sintax	TEXT_GOTO (goto)
 		 * @param	t_nombre_etiqueta	Nombre de la etiqueta
 		 * @return	void
 		 */
@@ -174,7 +182,7 @@
 		 * Cambia el Contexto de Ejecución Actual para volver al Contexto anterior al que se está ejecutando, recuperando el Cursor de Contexto Actual y el Program Counter previamente apilados en el Stack.
 		 * En caso de estar finalizando el Contexto principal (el ubicado al inicio del Stack), deberá finalizar la ejecución del programa.
 		 *
-		 * @sintax	TEXT_END (end )
+		 * @sintax	TEXT_END (end)
 		 * @param	void
 		 * @return	void
 		 */
@@ -185,13 +193,12 @@
 		 *
 		 * Cambia el Contexto de Ejecución Actual para volver al Contexto anterior al que se está ejecutando, recuperando el Cursor de Contexto Actual, el Program Counter y la direccion donde retornar, asignando el valor de retorno en esta, previamente apilados en el Stack.
 		 *
-		 * @sintax	TEXT_RETURN (return )
+		 * @sintax	TEXT_RETURN (return)
 		 * @param	retorno	Valor a ingresar en la posicion corespondiente
 		 * @return	void
 		 */
 		void (*AnSISOP_retornar)(t_valor_variable retorno);
-
-
+	} AnSISOP_funciones;
 
 	//Operaciones de Kernel
 	typedef struct {
@@ -201,7 +208,7 @@
 		 * Informa al kernel que ejecute la función wait para el semáforo con el nombre identificador_semaforo.
 		 * El kernel deberá decidir si bloquearlo o no.
 		 *
-		 * @sintax	TEXT_WAIT (wait )
+		 * @sintax	TEXT_WAIT (wait)
 		 * @param	identificador_semaforo	Semaforo a aplicar WAIT
 		 * @return	void
 		 */
@@ -213,82 +220,112 @@
 		 * Informa al kernel que ejecute la función signal para el semáforo con el nombre identificador_semaforo.
 		 * El kernel deberá decidir si desbloquear otros procesos o no.
 		 *
-		 * @sintax	TEXT_SIGNAL (signal )
+		 * @sintax	TEXT_SIGNAL (signal)
 		 * @param	identificador_semaforo	Semaforo a aplicar SIGNAL
 		 * @return	void
 		 */
 		void (*AnSISOP_signal)(t_nombre_semaforo identificador_semaforo);
 
 		/*
-		 * RESERVAR
+		 * RESERVAR MEMORIA
 		 *
-		 * Informa al kernel que reserve en el Heap una cantidad de memoria acorde al espacio recibido como parametro
+		 * Informa al kernel que reserve en el Heap una cantidad de memoria
+		 * acorde al espacio recibido como parametro.
 		 *
-		 * @sintax	TEXT_MALLOC espacio
+		 * @sintax	TEXT_MALLOC (alocar)
 		 * @param	valor_variable Cantidad de espacio
 		 * @return	puntero a donde esta reservada la memoria
 		 */
-		t_puntero (*AnSISOP_alocar)(t_valor_variable espacio);
+		t_puntero (*AnSISOP_reservar)(t_valor_variable espacio);
 
 		/*
-		 * LIBERAR
+		 * LIBERAR MEMORIA
 		 *
 		 * Informa al kernel que libera la memoria previamente reservada con RESERVAR.
 		 * Solo se podra liberar memoria previamente asignada con RESERVAR.
 		 *
-		 * @sintax	TEST_FREE variable
+		 * @sintax	TEXT_FREE (liberar)
 		 * @param	puntero Inicio de espacio de memoria a liberar (previamente retornado por RESERVAR)
 		 * @return	void
 		 */
 		void (*AnSISOP_liberar)(t_puntero puntero);
 
 		/*
-		 * ABRIR_ARCHIVO
+		 * ABRIR ARCHIVO
 		 *
 		 * Informa al Kernel que el proceso requiere que se abra un archivo.
 		 *
-		 * @syntax 	TEXT_ABRIR ruta flags
-		 * @param	ruta		Ruta al archivo a abrir.
-		 * @param	flags		String que contiene los permisos con los que se abre el archivo.
-		 * @return	t_descriptor_archivo	El valor del FD abierto por el sistema.
+		 * @syntax 	TEXT_ABRIR (abrir)
+		 * @param	direccion		Ruta al archivo a abrir
+		 * @param	flags		String que contiene los permisos con los que se abre el archivo
+		 * @return	El valor del descriptor de archivo abierto por el sistema
 		 */
-		t_descriptor_archivo (*AnSISOP_open)(t_path path, t_flags flags);
+		t_descriptor_archivo (*AnSISOP_open)(t_direccion_archivo direccion, t_banderas flags);
 
 		/*
-		 * BORRAR_ARCHIVO
+		 * BORRAR ARCHIVO
 		 *
 		 * Informa al Kernel que el proceso requiere que se borre un archivo.
 		 *
-		 * @syntax 	TEXT_DELETE path
-		 * @param	path		Ruta al archivo a abrir.
+		 * @syntax 	TEXT_DELETE (borrar)
+		 * @param	direccion		Ruta al archivo a abrir
 		 * @return	void
 		 */
-		void (*AnSISOP_borrar)(t_path path);
+		void (*AnSISOP_borrar)(t_descriptor_archivo direccion);
 
 		/*
-		 * CERRAR_ARCHIVO
+		 * CERRAR ARCHIVO
 		 *
 		 * Informa al Kernel que el proceso requiere que se cierre un archivo.
 		 *
-		 * @syntax 	CLOSE (close )
-		 * @param	file_descriptor		File Descriptor del archivo abierto.
+		 * @syntax 	TEXT_CLOSE (cerrar)
+		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
 		 * @return	void
 		 */
-		void (*AnSISOP_cerrar)(t_file_descriptor file_descriptor);
 
+		void (*AnSISOP_cerrar)(t_descriptor_archivo descriptor_archivo);
 
 		/*
-		 * WRITE
+		 * MOVER CURSOR DE ARCHIVO
 		 *
-		 * Informa al Kernel que el proceso requiere que se escriba un archivo.
+		 * Informa al Kernel que el proceso requiere que se mueva el cursor a la posicion indicada.
 		 *
-		 * @syntax 	WRITE (write )
-		 * @param	file_descriptor		File Descriptor del archivo abierto.
-		 * @param	data			Puntero que indica donde comienza la informacion a ser copiada.
-		 * @param	size			Tamanio de la informacion a enviar. Debe ser un offset valido de putero.
+		 * @syntax 	TEXT_SEEK (buscar)
+		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
+		 * @param	posicion			Posicion a donde mover el cursor
 		 * @return	void
 		 */
-		void (*AnSISOP_write)(t_file_descriptor file_descriptor, t_puntero data, t_valor_variable size);
+		void (*AnSISOP_buscar)(t_descriptor_archivo descriptor_archivo, t_valor_variable posicion);
+
+		/*
+		 * ESCRIBIR ARCHIVO
+		 *
+		 * Informa al Kernel que el proceso requiere que se escriba un archivo previamente abierto.
+		 * El mismo escribira "tamanio" de bytes de "informacion" luego del cursor
+		 * No es necesario mover el cursor luego de esta operación
+		 *
+		 * @syntax 	TEXT_WRITE (escribir)
+		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
+		 * @param	informacion			Informacion a ser escrita
+		 * @param	tamanio				Tamanio de la informacion a enviar
+		 * @return	void
+		 */
+		void (*AnSISOP_escribir)(t_descriptor_archivo descriptor_archivo, void* informacion, t_valor_variable tamanio);
+
+		/*
+		 * LEER ARCHIVO
+		 *
+		 * Informa al Kernel que el proceso requiere que se lea un archivo previamente abierto.
+		 * El mismo leera "tamanio" de bytes luego del cursor.
+		 * No es necesario mover el cursor luego de esta operación
+		 *
+		 * @syntax 	TEXT_READ (leer)
+		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
+		 * @param	informacion			Puntero que indica donde se guarda la informacion leida
+		 * @param	tamanio				Tamanio de la informacion a leer
+		 * @return	void
+		 */
+		void (*AnSISOP_leer)(t_descriptor_archivo descriptor_archivo, t_puntero informacion, t_valor_variable tamanio);
 
 
 	} AnSISOP_kernel;

@@ -16,6 +16,8 @@
 
 #include "parser.h"
 
+#define DESCRIPTOR_SALIDA 0
+
 bool _string_contiene(char* aguja, char* pajar);
 char* _string_trim(char* texto);
 bool _esDefinicionVariable(char* linea);
@@ -45,6 +47,7 @@ t_puntero _obtenerPosicion(t_nombre_variable* operador, AnSISOP_funciones* como)
 t_valor_variable _operar(char* operador, AnSISOP_funciones* como);
 char** _obtenerParametros(char* params, t_valor_variable* parametrosValor, AnSISOP_funciones *operations);
 void _llamadaFuncion(char* parametrosLiteral, void(*helper_llamada)(void), AnSISOP_funciones* como);
+void _imprimir(char* linea, AnSISOP_kernel* como);
 
 void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel){
 	char	*linea,
@@ -75,22 +78,25 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 
 		free(operation);
 	} else if( _esImprimirVariable(linea) ){
-		AnSISOP_funciones->AnSISOP_imprimirValor( _operar(_string_trim(linea + strlen(TEXT_PRINT_NUMBER)), AnSISOP_funciones) );
+		_imprimir(string_itoa( _operar(_string_trim(linea + strlen(TEXT_PRINT_NUMBER)), AnSISOP_funciones)), AnSISOP_funciones_kernel );
 	} else if(_esImprimirLiteral(linea) ){
-		AnSISOP_funciones->AnSISOP_imprimirLiteral(linea + strlen(TEXT_PRINT_LITERAL)+1);	//No trimeo, proque imprime el literal, pero separo el primer caracter
+		//No trimeo, proque imprime el literal, pero separo el primer caracter
+		_imprimir(linea + strlen(TEXT_PRINT_LITERAL)+1, AnSISOP_funciones_kernel);
 	} else if(_esImprimirTexto(linea) ){
 		//CLICLAR POR LA POSICION DADA HASTA ENCONTRAR UN EOL
-		t_puntero posicionInicial = AnSISOP_funciones->AnSISOP_obtenerPosicionVariable(_string_trim(linea + strlen(TEXT_PRINT_STRING) + 1));
+		t_puntero posicionInicial = _obtenerPosicion(_string_trim(linea + strlen(TEXT_PRINT_STRING) + 1), AnSISOP_funciones);
 		int offset = 0;
+		char* texto = string_new();
 		for (;;){
 			t_valor_variable caracterAImprimir = AnSISOP_funciones->AnSISOP_dereferenciar(posicionInicial + offset);
 			if( caracterAImprimir == EOL )
 				break;
 			char* literal = string_from_format("%c", caracterAImprimir);
-			AnSISOP_funciones->AnSISOP_imprimirLiteral(literal);
+			string_append(&texto, literal);
 			free(literal);
 			offset++;
 		}
+		_imprimir(texto, AnSISOP_funciones_kernel);
 	} else if( _esRetorno(linea) ){
 		AnSISOP_funciones->AnSISOP_retornar( _operar(_string_trim(linea + strlen(TEXT_RETURN)), AnSISOP_funciones)  );
 	} else if( _esGoTo(linea) ){
@@ -105,15 +111,10 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		AnSISOP_funciones_kernel->AnSISOP_signal( _string_trim(linea + strlen(TEXT_SIGNAL)) );
 	} else if( _esLlamadaWait(linea) ){
 		AnSISOP_funciones_kernel->AnSISOP_wait( _string_trim(linea + strlen(TEXT_WAIT)) );
-	} else if( _esEntradaSalida(linea) ) {
-		char **operation = string_split(linea + strlen(TEXT_IO), " ");
-		AnSISOP_funciones->AnSISOP_entradaSalida(_string_trim(operation[0]), atoi(_string_trim(operation[1])));
-		string_iterate_lines(operation, (void *) free);
-		free(operation);
 	} else if( _esAlocar(linea) ){
 		//MALLOC POSICION CANTIDAD
 		char **operation = string_split(linea + strlen(TEXT_MALLOC), " ");
-		t_puntero value = AnSISOP_funciones_kernel->AnSISOP_alocar( _operar(operation[1], AnSISOP_funciones) );
+		t_puntero value = AnSISOP_funciones_kernel->AnSISOP_reservar( _operar(operation[1], AnSISOP_funciones) );
 		AnSISOP_funciones->AnSISOP_asignar(_obtenerPosicion(operation[0], AnSISOP_funciones), value);
 		free(operation);
 	} else if( _esLiberar(linea) ){
@@ -341,4 +342,8 @@ void _llamadaFuncion(char* parametrosLiteral, void(*helper_llamada)(void), AnSIS
 		string_iterate_lines(parametros, (void *)free);
 		free(parametros);
 	}
+}
+
+void _imprimir(char* linea, AnSISOP_kernel* como){
+	como->AnSISOP_escribir(DESCRIPTOR_SALIDA, linea, string_length(linea)+1);
 }
