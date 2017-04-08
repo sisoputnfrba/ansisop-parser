@@ -4,7 +4,7 @@
 
 AnSISOP_funciones *funciones = NULL;
 AnSISOP_kernel *kernel = NULL;
-bool imprimirEnPantalla = false;
+bool imprimirEnPantalla = true;
 
 context (parser) {
 
@@ -22,6 +22,8 @@ context (parser) {
         kernel->AnSISOP_reservar = alocar;
         kernel->AnSISOP_liberar = liberar;
 
+        kernel->AnSISOP_abrir = abrir;
+        kernel->AnSISOP_borrar = borrar;
         kernel->AnSISOP_escribir = escribir;
     };
 
@@ -81,7 +83,6 @@ context (parser) {
 
         it("imprimir un string en memoria") {
             //setup un dereferenciar de mentira
-
             funciones->AnSISOP_obtenerPosicionVariable = ({
                 t_puntero __obtenerDeMentira(t_nombre_variable _){
                     return 0;
@@ -99,6 +100,28 @@ context (parser) {
             funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
             funciones->AnSISOP_dereferenciar = dereferenciar;
         } end
+
+         it("abrir un archivo") {
+            analizadorLinea("abrir LC /utn/so/archivo", funciones, kernel);
+            assertAbrir("/utn/so/archivo", (t_banderas){.lectura = true, .escritura = false, .creacion = true}); 
+         } end
+
+         it("abrir un archivo, los flags importan") {
+            analizadorLinea("abrir LE /utn/so/archivo", funciones, kernel);
+            assertAbrir("/utn/so/archivo", (t_banderas){.lectura = true, .escritura = true, .creacion = false});
+         } end
+            
+         it("borrar un archivo") {
+            analizadorLinea("borrar t", funciones, kernel);
+            t_puntero posicionT = assertObtenerPosicion('t');
+            t_valor_variable descriptor = assertDereferenciar(posicionT);
+            assertBorrar(descriptor);
+         } end
+
+         it("borrar un descriptor cualquiera") {
+             analizadorLinea("borrar 5+2", funciones, kernel);
+             assertBorrar(5+2);
+         } end
     } end
 
     parserUtilTearDown();

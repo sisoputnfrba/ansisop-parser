@@ -44,6 +44,13 @@
 	#define TEXT_MALLOC "alocar"
 	#define TEXT_FREE "liberar"
 
+	#define TEXT_OPEN_FILE "abrir"
+	#define TEXT_DELETE_FILE "borrar"
+	#define TEXT_CLOSE_FILE "cerrar"
+	#define TEXT_SEEK_FILE "buscar"
+	#define TEXT_WRITE_FILE "escribir"
+	#define TEXT_READ_FILE "leer"
+
 	#define TEXT_ASSIGNATION "="
 	#define TEXT_SUM "+"
 	#define TEXT_SUBSTRACTION "-"

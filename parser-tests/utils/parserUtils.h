@@ -17,6 +17,8 @@
         t_valor_variable valor_variable;
         t_nombre_etiqueta nombre_etiqueta;
         t_descriptor_archivo descriptor_archivo;
+        t_direccion_archivo direccion_archivo;
+        t_banderas banderas;
     } Parametro;
 
     typedef struct {
@@ -38,6 +40,8 @@ void asignar(t_puntero, t_valor_variable);
 void irAlLabel(t_nombre_etiqueta nombre_etiqueta);
 t_puntero alocar(t_valor_variable);
 void liberar(t_puntero);
+t_descriptor_archivo abrir(t_direccion_archivo, t_banderas);
+void borrar(t_descriptor_archivo);
 void escribir(t_descriptor_archivo, void *, t_valor_variable);
 
 t_puntero assertDefinirVariable(t_nombre_variable);
@@ -48,6 +52,8 @@ void assertIrAlLabel(t_nombre_etiqueta nombre_etiqueta);
 t_puntero assertMalloc(t_valor_variable);
 void assertLiberar(t_puntero);
 void assertEscribir(t_descriptor_archivo, void*, t_valor_variable);
+t_descriptor_archivo assertAbrir(t_direccion_archivo, t_banderas);
+void assertBorrar(t_descriptor_archivo);
 
 
 #endif //ANSISOP_PARSER_PARSERUTILS_H

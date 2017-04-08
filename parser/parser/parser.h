@@ -258,19 +258,19 @@
 		 *
 		 * Informa al Kernel que el proceso requiere que se abra un archivo.
 		 *
-		 * @syntax 	TEXT_ABRIR (abrir)
+		 * @syntax 	TEXT_OPEN_FILE (abrir)
 		 * @param	direccion		Ruta al archivo a abrir
-		 * @param	flags		String que contiene los permisos con los que se abre el archivo
+		 * @param	banderas		String que contiene los permisos con los que se abre el archivo
 		 * @return	El valor del descriptor de archivo abierto por el sistema
 		 */
-		t_descriptor_archivo (*AnSISOP_open)(t_direccion_archivo direccion, t_banderas flags);
+		t_descriptor_archivo (*AnSISOP_abrir)(t_direccion_archivo direccion, t_banderas flags);
 
 		/*
 		 * BORRAR ARCHIVO
 		 *
 		 * Informa al Kernel que el proceso requiere que se borre un archivo.
 		 *
-		 * @syntax 	TEXT_DELETE (borrar)
+		 * @syntax 	TEXT_DELETE_FILE (borrar)
 		 * @param	direccion		Ruta al archivo a abrir
 		 * @return	void
 		 */
@@ -281,7 +281,7 @@
 		 *
 		 * Informa al Kernel que el proceso requiere que se cierre un archivo.
 		 *
-		 * @syntax 	TEXT_CLOSE (cerrar)
+		 * @syntax 	TEXT_CLOSE_FILE (cerrar)
 		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
 		 * @return	void
 		 */
@@ -293,7 +293,7 @@
 		 *
 		 * Informa al Kernel que el proceso requiere que se mueva el cursor a la posicion indicada.
 		 *
-		 * @syntax 	TEXT_SEEK (buscar)
+		 * @syntax 	TEXT_SEEK_FILE (buscar)
 		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
 		 * @param	posicion			Posicion a donde mover el cursor
 		 * @return	void
@@ -307,7 +307,7 @@
 		 * El mismo escribira "tamanio" de bytes de "informacion" luego del cursor
 		 * No es necesario mover el cursor luego de esta operación
 		 *
-		 * @syntax 	TEXT_WRITE (escribir)
+		 * @syntax 	TEXT_WRITE_FILE (escribir)
 		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
 		 * @param	informacion			Informacion a ser escrita
 		 * @param	tamanio				Tamanio de la informacion a enviar
@@ -322,7 +322,7 @@
 		 * El mismo leera "tamanio" de bytes luego del cursor.
 		 * No es necesario mover el cursor luego de esta operación
 		 *
-		 * @syntax 	TEXT_READ (leer)
+		 * @syntax 	TEXT_READ_FILE (leer)
 		 * @param	descriptor_archivo		Descriptor de archivo del archivo abierto
 		 * @param	informacion			Puntero que indica donde se guarda la informacion leida
 		 * @param	tamanio				Tamanio de la informacion a leer

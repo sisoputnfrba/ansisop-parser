@@ -1,3 +1,4 @@
+#include <parser/parser.h>
 #include "parserUtils.h"
 
 t_queue* llamadas = NULL;
@@ -59,6 +60,7 @@ Parametro* crearRetorno(){
 
 #define CON_RETORNO_PUNTERO     CON_RETORNO("p", puntero)
 #define CON_RETORNO_VALOR     CON_RETORNO("d", valor_variable)
+#define CON_RETORNO_DESCRIPTOR CON_RETORNO_VALOR
 
 #define CON_RETORNO(FORMATO, TIPO) \
 Parametro *retorno = crearRetorno(); \
@@ -108,6 +110,23 @@ void liberar(t_puntero puntero){
     log_trace(logger, "Reserva [%p] espacio", puntero);
 
     queue_push(llamadas, crearLlamada("liberar", 1, puntero));
+}
+
+char* boolToChar(bool boolean) {
+    return boolean ? "✔" : "✖";
+}
+
+t_descriptor_archivo abrir(t_direccion_archivo direccion, t_banderas banderas){
+    log_trace(logger, "Abrir [%s] Lectura: %s. Escritura: %s, Creacion: %s", direccion,
+              boolToChar(banderas.lectura), boolToChar(banderas.escritura), boolToChar(banderas.creacion));
+
+    queue_push(llamadas, crearLlamada("abrir", 2, direccion, banderas));
+    CON_RETORNO_DESCRIPTOR;
+}
+
+void borrar(t_descriptor_archivo descriptor){
+    log_trace(logger, "Borrar [%d]", descriptor);
+    queue_push(llamadas, crearLlamada("borrar", 1, descriptor));
 }
 
 void escribir(t_descriptor_archivo desc, void * informacion, t_valor_variable tamanio){
@@ -183,9 +202,30 @@ void assertEscribir(t_descriptor_archivo descriptor, void * informacion, t_valor
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("escribir");
     should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
-    should_string(llamada->parametros[1].puntero) be equal to(informacion);
+    should_string((char*)llamada->parametros[1].puntero) be equal to(informacion);
     should_int(llamada->parametros[2].valor_variable) be equal to(tamanio);
-    free(llamada->parametros[1].puntero);
+    free((void *) llamada->parametros[1].puntero);
+    free(llamada->parametros);
+    free(llamada);
+}
+
+t_descriptor_archivo assertAbrir(t_direccion_archivo direccion, t_banderas banderas){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("abrir");
+    should_string(llamada->parametros[0].direccion_archivo) be equal to(direccion);
+    should_int(llamada->parametros[1].banderas.lectura) be equal to(banderas.lectura);
+    should_int(llamada->parametros[1].banderas.escritura) be equal to(banderas.escritura);
+    should_int(llamada->parametros[1].banderas.creacion) be equal to(banderas.creacion);
+    free(llamada->parametros[0].direccion_archivo);
+    free(llamada->parametros);
+    free(llamada);
+    return ultimoRetorno()->descriptor_archivo;
+}
+
+void assertBorrar(t_descriptor_archivo descriptor){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("borrar");
+    should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
     free(llamada->parametros);
     free(llamada);
 }

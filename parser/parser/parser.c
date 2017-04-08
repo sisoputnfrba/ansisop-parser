@@ -38,6 +38,12 @@ bool _esImprimirTexto(char *linea);
 bool _esFin(char* linea);
 bool _esRetorno(char* linea);
 bool _esEspacio(char caracter);
+bool _esAbrirArchivo(char *linea);
+bool _esBorrarArchivo(char *linea);
+bool _esCerrarArchivo(char *linea);
+bool _esMoverCursor(char *linea);
+bool _esEscribirArchivo(char *linea);
+bool _esLeerArchivo(char *linea);
 bool _separarDelimitadorYHacer(char* linea, t_puntero (*operacion_mandar)(t_nombre_variable));
 void _saltoCondicional(char* linea, AnSISOP_funciones* como, bool(*comparacion)(t_valor_variable));
 char* *_separarOperadores(char *texto, char *separador);
@@ -46,6 +52,7 @@ t_valor_variable _operar(char* operador, AnSISOP_funciones* como);
 char** _obtenerParametros(char* params, t_valor_variable* parametrosValor, AnSISOP_funciones *operations);
 void _llamadaFuncion(char* parametrosLiteral, void(*helper_llamada)(void), AnSISOP_funciones* como);
 void _imprimir(char* linea, AnSISOP_kernel* como);
+t_banderas _interpretarBanderas(char *banderas);
 
 void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel){
 	char	*linea,
@@ -110,6 +117,14 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		AnSISOP_funciones_kernel->AnSISOP_signal( _string_trim(linea + strlen(TEXT_SIGNAL)) );
 	} else if( _esLlamadaWait(linea) ){
 		AnSISOP_funciones_kernel->AnSISOP_wait( _string_trim(linea + strlen(TEXT_WAIT)) );
+	} else if( _esAbrirArchivo(linea) ){
+		char **operation = string_split(linea, " ");
+		AnSISOP_funciones_kernel->AnSISOP_abrir(_string_trim(operation[2]), _interpretarBanderas(operation[1]));
+		free(operation);
+	} else if( _esBorrarArchivo(linea) ){
+		AnSISOP_funciones_kernel->AnSISOP_borrar(
+				(t_descriptor_archivo) _operar(linea + strlen(TEXT_DELETE_FILE) + 1, AnSISOP_funciones)
+		);
 	} else if( _esAlocar(linea) ){
 		//MALLOC POSICION CANTIDAD
 		char **operation = string_split(linea + strlen(TEXT_MALLOC), " ");
@@ -138,6 +153,14 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		free(lineAux);
 	}
 	free(linea);
+}
+
+t_banderas _interpretarBanderas(char *banderas) {
+	return (t_banderas){
+			.lectura	= _string_contiene(banderas, "L"),
+			.escritura	= _string_contiene(banderas, "E"),
+			.creacion	= _string_contiene(banderas, "C")
+	};
 }
 
 
@@ -234,6 +257,25 @@ bool _esRetorno(char* linea){
 
 bool _esEspacio(char caracter){
 	return caracter==' ' || caracter=='\t' || caracter=='\f' || caracter=='\r' || caracter=='\v';
+}
+
+bool _esAbrirArchivo(char *linea){
+	return string_starts_with(linea, TEXT_OPEN_FILE);
+}
+bool _esBorrarArchivo(char *linea){
+	return string_starts_with(linea, TEXT_DELETE_FILE);
+}
+bool _esCerrarArchivo(char *linea){
+	return string_starts_with(linea, TEXT_CLOSE_FILE);
+}
+bool _esMoverCursor(char *linea){
+	return string_starts_with(linea, TEXT_SEEK_FILE);
+}
+bool _esEscribirArchivo(char *linea){
+	return string_starts_with(linea, TEXT_WRITE_FILE);
+}
+bool _esLeerArchivo(char *linea){
+	return string_starts_with(linea, TEXT_READ_FILE);
 }
 
 bool _separarDelimitadorYHacer(char* linea, t_puntero (*operacion_mandar)(t_nombre_variable)){
