@@ -146,7 +146,11 @@ void escribir(t_descriptor_archivo desc, void * informacion, t_valor_variable ta
     queue_push(llamadas, crearLlamada("escribir", 3, desc, string_duplicate(informacion), tamanio));
 }
 
+void leer(t_descriptor_archivo descriptor, t_puntero informacion, t_valor_variable tamanio){
+    log_trace(logger, "Leer desde [%d] a [%p] con tamaño [%d]", descriptor, informacion, tamanio);
 
+    queue_push(llamadas, crearLlamada("leer", 3, descriptor, informacion, tamanio));
+}
 
 t_puntero assertDefinirVariable(t_nombre_variable valor){
     Llamada* llamada = ultimaLlamada();
@@ -254,6 +258,16 @@ void assertMoverCursor(t_descriptor_archivo descriptor, t_valor_variable posicio
     should_string(llamada->nombre) be equal to("mover");
     should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
     should_int(llamada->parametros[1].valor_variable) be equal to(posicion);
+    free(llamada->parametros);
+    free(llamada);
+}
+
+void assertLeer(t_descriptor_archivo descriptor, t_puntero informacion, t_valor_variable tamanio){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("leer");
+    should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
+    should_int(llamada->parametros[1].puntero) be equal to(informacion);
+    should_int(llamada->parametros[2].valor_variable) be equal to(tamanio);
     free(llamada->parametros);
     free(llamada);
 }

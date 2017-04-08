@@ -53,6 +53,7 @@ char** _obtenerParametros(char* params, t_valor_variable* parametrosValor, AnSIS
 void _llamadaFuncion(char* parametrosLiteral, void(*helper_llamada)(void), AnSISOP_funciones* como);
 void _imprimir(char* linea, AnSISOP_kernel* como);
 t_banderas _interpretarBanderas(char *banderas);
+char* _obtenerString(char *operacionPuntero, bool (*deberiaFrenar)(char, int), AnSISOP_funciones *AnSISOP_funciones);
 
 void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funciones, AnSISOP_kernel *AnSISOP_funciones_kernel){
 	char	*linea,
@@ -89,18 +90,11 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		_imprimir(linea + strlen(TEXT_PRINT_LITERAL)+1, AnSISOP_funciones_kernel);
 	} else if(_esImprimirTexto(linea) ){
 		//CLICLAR POR LA POSICION DADA HASTA ENCONTRAR UN EOL
-		t_puntero posicionInicial = _obtenerPosicion(_string_trim(linea + strlen(TEXT_PRINT_STRING) + 1), AnSISOP_funciones);
-		int offset = 0;
-		char* texto = string_new();
-		for (;;){
-			t_valor_variable caracterAImprimir = AnSISOP_funciones->AnSISOP_dereferenciar(posicionInicial + offset);
-			if( caracterAImprimir == EOL )
-				break;
-			char* literal = string_from_format("%c", caracterAImprimir);
-			string_append(&texto, literal);
-			free(literal);
-			offset++;
+		char *operacionPuntero = linea + strlen(TEXT_PRINT_STRING) + 1;
+		bool terminaString(char caracter, int indice){
+			return  caracter == EOL;
 		}
+		char *texto = _obtenerString(operacionPuntero, terminaString, AnSISOP_funciones);
 		_imprimir(texto, AnSISOP_funciones_kernel);
 		free(texto);
 	} else if( _esRetorno(linea) ){
@@ -129,6 +123,29 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		AnSISOP_funciones_kernel->AnSISOP_cerrar(
 				(t_descriptor_archivo) _operar(linea + strlen(TEXT_CLOSE_FILE) + 1, AnSISOP_funciones)
 		);
+	} else if( _esLeerArchivo(linea) ){
+		char **operation = string_split(linea + strlen(TEXT_READ_FILE), " ");
+		AnSISOP_funciones_kernel->AnSISOP_leer(
+				(t_descriptor_archivo) _operar(operation[0], AnSISOP_funciones),
+				_obtenerPosicion(operation[1], AnSISOP_funciones),
+				_operar(operation[2], AnSISOP_funciones)
+		);
+		free(operation);
+	} else if( _esEscribirArchivo(linea) ){
+		char **operation = string_split(linea + strlen(TEXT_WRITE_FILE), " ");
+		t_valor_variable tamanio = _operar(operation[2], AnSISOP_funciones);
+		bool frenarPorCantidad(char caracter, int indice){
+			return indice >= tamanio;
+		}
+
+		void *texto = _obtenerString(operation[1], frenarPorCantidad, AnSISOP_funciones);
+		AnSISOP_funciones_kernel->AnSISOP_escribir(
+				(t_descriptor_archivo) _operar(operation[0], AnSISOP_funciones),
+				texto,
+				tamanio
+		);
+		free(texto);
+		free(operation);
 	} else if( _esMoverCursor(linea) ){
 		char **operation = string_split(linea + strlen(TEXT_SEEK_FILE), " ");
 		AnSISOP_funciones_kernel->AnSISOP_moverCursor(
@@ -164,6 +181,22 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		free(lineAux);
 	}
 	free(linea);
+}
+
+char* _obtenerString(char *operacionPuntero, bool (*deberiaFrenar)(char, int), AnSISOP_funciones *AnSISOP_funciones) {
+	t_puntero posicionInicial = _obtenerPosicion(_string_trim(operacionPuntero), AnSISOP_funciones);
+	int offset = 0;
+	char* texto = string_new();
+	for (;;){
+			t_valor_variable caracterAImprimir = AnSISOP_funciones->AnSISOP_dereferenciar(posicionInicial + offset);
+			if( deberiaFrenar(caracterAImprimir, offset) )
+				break;
+			char* literal = string_from_format("%c", caracterAImprimir);
+			string_append(&texto, literal);
+			free(literal);
+			offset++;
+		}
+	return texto;
 }
 
 t_banderas _interpretarBanderas(char *banderas) {

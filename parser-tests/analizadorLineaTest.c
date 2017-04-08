@@ -4,7 +4,7 @@
 
 AnSISOP_funciones *funciones = NULL;
 AnSISOP_kernel *kernel = NULL;
-bool imprimirEnPantalla = true;
+bool imprimirEnPantalla = false;
 
 context (parser) {
 
@@ -27,6 +27,7 @@ context (parser) {
         kernel->AnSISOP_cerrar = cerrar;
         kernel->AnSISOP_moverCursor = moverCursor;
         kernel->AnSISOP_escribir = escribir;
+        kernel->AnSISOP_leer = leer;
     };
 
     setup();
@@ -134,6 +135,31 @@ context (parser) {
              analizadorLinea("buscar 3 t+5", funciones, kernel);
              t_valor_variable valorT = assertDereferenciar(assertObtenerPosicion('t'));
              assertMoverCursor(3, valorT+5);
+         } end
+
+         it("leer de un archivo") {
+             analizadorLinea("leer 1 t 4-2", funciones, kernel);
+             t_puntero posicionT = assertObtenerPosicion('t');
+             assertLeer(1, posicionT, 4-2);
+         } end
+
+         it("escribir en un archivo") {
+             funciones->AnSISOP_obtenerPosicionVariable = ({
+               t_puntero __obtenerDeMentira(t_nombre_variable _){
+                  return 0;
+               } __obtenerDeMentira; });
+             funciones->AnSISOP_dereferenciar = ({
+                t_valor_variable __dereferenciarMentira(t_puntero puntero){
+                  char stringEnMemoria[] = { 'b', 'a', 'm', '\0', '\0' };
+                  return stringEnMemoria[puntero];
+                } __dereferenciarMentira; });
+
+             analizadorLinea("escribir 0 t 3", funciones, kernel);
+             assertEscribir(0, "bam", 3);
+
+             //Rollback
+             funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
+             funciones->AnSISOP_dereferenciar = dereferenciar;
          } end
     } end
 
