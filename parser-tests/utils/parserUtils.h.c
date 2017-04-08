@@ -57,8 +57,8 @@ Parametro* crearRetorno(){
     return ret;
 }
 
-#define CON_RETORNO_PUNTERO     CON_RETORNO("%p", puntero)
-#define CON_RETORNO_VALOR     CON_RETORNO("%d", valor_variable)
+#define CON_RETORNO_PUNTERO     CON_RETORNO("p", puntero)
+#define CON_RETORNO_VALOR     CON_RETORNO("d", valor_variable)
 
 #define CON_RETORNO(FORMATO, TIPO) \
 Parametro *retorno = crearRetorno(); \
@@ -97,16 +97,6 @@ void irAlLabel(t_nombre_etiqueta nombre_etiqueta) {
     queue_push(llamadas, crearLlamada("irAlLabel", 1, strdup(nombre_etiqueta)));
 }
 
-void imprimir(t_valor_variable valor){
-    log_trace(logger, "Imprimir variable [%d]", valor);
-    queue_push(llamadas, crearLlamada("imprimir", 1, valor));
-}
-
-void imprimirLiteral(char *texto){
-    log_trace(logger, "Imprimir texto [%s]", texto);
-    queue_push(llamadas, crearLlamada("imprimirLiteral", 1, strdup(texto)));
-}
-
 t_puntero alocar(t_valor_variable espacio){
     log_trace(logger, "Reserva [%d] espacio", espacio);
 
@@ -119,6 +109,14 @@ void liberar(t_puntero puntero){
 
     queue_push(llamadas, crearLlamada("liberar", 1, puntero));
 }
+
+void escribir(t_descriptor_archivo desc, void * informacion, t_valor_variable tamanio){
+    log_trace(logger, "Escribir [%.*s]:%d a [%d]", tamanio, informacion, tamanio, desc);
+
+    queue_push(llamadas, crearLlamada("escribir", 3, desc, string_duplicate(informacion), tamanio));
+}
+
+
 
 t_puntero assertDefinirVariable(t_nombre_variable valor){
     Llamada* llamada = ultimaLlamada();
@@ -164,23 +162,6 @@ void assertIrAlLabel(t_nombre_etiqueta nombre_etiqueta) {
     free(llamada);
 }
 
-void assertImprimir(t_valor_variable valor){
-    Llamada* llamada = ultimaLlamada();
-    should_string(llamada->nombre) be equal to("imprimir");
-    should_int(llamada->parametros[0].valor_variable) be equal to(valor);
-    free(llamada->parametros);
-    free(llamada);
-}
-
-void assertImprimirLiteral(char* texto){
-    Llamada* llamada = ultimaLlamada();
-    should_string(llamada->nombre) be equal to("imprimirLiteral");
-    should_string(llamada->parametros[0].puntero) be equal to(texto);
-    free(llamada->parametros);
-    free(llamada);
-}
-
-
 t_puntero assertMalloc(t_valor_variable espacio){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("alocar");
@@ -194,6 +175,17 @@ void assertLiberar(t_puntero puntero){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("liberar");
     should_int(llamada->parametros[0].puntero) be equal to(puntero);
+    free(llamada->parametros);
+    free(llamada);
+}
+
+void assertEscribir(t_descriptor_archivo descriptor, void * informacion, t_valor_variable tamanio){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("escribir");
+    should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
+    should_string(llamada->parametros[1].puntero) be equal to(informacion);
+    should_int(llamada->parametros[2].valor_variable) be equal to(tamanio);
+    free(llamada->parametros[1].puntero);
     free(llamada->parametros);
     free(llamada);
 }

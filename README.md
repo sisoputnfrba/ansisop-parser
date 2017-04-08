@@ -40,3 +40,18 @@ Por ejemplo:
 ```c
 #include <parser/metadata_program.h>
 ```
+
+## Tests
+
+Para ejecutar los tests es necesario tener instalado CMake.
+
+```
+git submodule update --init # Clonar cspec
+cd cspec
+make                        # Compilar cspec
+sudo make install           # Instalar cspec
+cd ..
+cmake .                     # Generar Makefile
+make                        # Compilar proyecto
+./so-parser-dummy/dummy     # Ejecutar los tests
+```

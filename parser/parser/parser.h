@@ -28,6 +28,9 @@
 	#include <commons/string.h>
 	#include <commons/error.h>
 
+	//Descriptores
+	#define DESCRIPTOR_SALIDA 0
+
 	//Tipos de datos
 	typedef u_int32_t t_puntero;
 	typedef u_int32_t t_size;

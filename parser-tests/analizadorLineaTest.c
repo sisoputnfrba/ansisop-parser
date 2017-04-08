@@ -21,6 +21,8 @@ context (parser) {
 
         kernel->AnSISOP_reservar = alocar;
         kernel->AnSISOP_liberar = liberar;
+
+        kernel->AnSISOP_escribir = escribir;
     };
 
     setup();
@@ -68,12 +70,13 @@ context (parser) {
             analizadorLinea("prints n x+53-&b", funciones, kernel);
                 t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
                 t_puntero posicionB = assertObtenerPosicion('b');
-                assertImprimir(valorX+53-posicionB);
+                char *valorAImprimir = string_itoa(valorX + 53 - posicionB);
+                assertEscribir(DESCRIPTOR_SALIDA, valorAImprimir, string_length(valorAImprimir)+1);
         } end
 
         it("imprimir un literal") {
             analizadorLinea("prints l Holitas", funciones, kernel);
-                assertImprimirLiteral("Holitas");
+            assertEscribir(DESCRIPTOR_SALIDA, "Holitas", 8);
         } end
 
         it("imprimir un string en memoria") {
@@ -90,10 +93,7 @@ context (parser) {
                 } __dereferenciarMentira; });
 
             analizadorLinea("prints s x", funciones, kernel);
-                assertImprimirLiteral("H");
-                assertImprimirLiteral("o");
-                assertImprimirLiteral("l");
-                assertImprimirLiteral("a");
+            assertEscribir(DESCRIPTOR_SALIDA, "Hola", 5);
 
             //Rollback
             funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;

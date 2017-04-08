@@ -16,6 +16,7 @@
         t_puntero puntero;
         t_valor_variable valor_variable;
         t_nombre_etiqueta nombre_etiqueta;
+        t_descriptor_archivo descriptor_archivo;
     } Parametro;
 
     typedef struct {
@@ -34,22 +35,19 @@ t_puntero definirVariable(t_nombre_variable);
 t_puntero obtenerPosicionVariable(t_nombre_variable);
 t_valor_variable dereferenciar(t_puntero);
 void asignar(t_puntero, t_valor_variable);
-void imprimir(t_valor_variable valor);
-void imprimirLiteral(char *texto);
 void irAlLabel(t_nombre_etiqueta nombre_etiqueta);
 t_puntero alocar(t_valor_variable);
 void liberar(t_puntero);
-
+void escribir(t_descriptor_archivo, void *, t_valor_variable);
 
 t_puntero assertDefinirVariable(t_nombre_variable);
 t_puntero assertObtenerPosicion(t_nombre_variable);
 t_valor_variable assertDereferenciar(t_puntero);
 void assertAsignar(t_puntero, t_valor_variable);
-void assertImprimir(t_valor_variable);
-void assertImprimirLiteral(char*);
 void assertIrAlLabel(t_nombre_etiqueta nombre_etiqueta);
 t_puntero assertMalloc(t_valor_variable);
 void assertLiberar(t_puntero);
+void assertEscribir(t_descriptor_archivo, void*, t_valor_variable);
 
 
 #endif //ANSISOP_PARSER_PARSERUTILS_H

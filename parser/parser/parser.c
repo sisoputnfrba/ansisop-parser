@@ -16,8 +16,6 @@
 
 #include "parser.h"
 
-#define DESCRIPTOR_SALIDA 0
-
 bool _string_contiene(char* aguja, char* pajar);
 char* _string_trim(char* texto);
 bool _esDefinicionVariable(char* linea);
@@ -97,6 +95,7 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 			offset++;
 		}
 		_imprimir(texto, AnSISOP_funciones_kernel);
+		free(texto);
 	} else if( _esRetorno(linea) ){
 		AnSISOP_funciones->AnSISOP_retornar( _operar(_string_trim(linea + strlen(TEXT_RETURN)), AnSISOP_funciones)  );
 	} else if( _esGoTo(linea) ){
