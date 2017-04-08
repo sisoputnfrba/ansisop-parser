@@ -24,6 +24,8 @@ context (parser) {
 
         kernel->AnSISOP_abrir = abrir;
         kernel->AnSISOP_borrar = borrar;
+        kernel->AnSISOP_cerrar = cerrar;
+        kernel->AnSISOP_moverCursor = moverCursor;
         kernel->AnSISOP_escribir = escribir;
     };
 
@@ -121,6 +123,17 @@ context (parser) {
          it("borrar un descriptor cualquiera") {
              analizadorLinea("borrar 5+2", funciones, kernel);
              assertBorrar(5+2);
+         } end
+
+         it("cerrar un descriptor") {
+             analizadorLinea("cerrar 0", funciones, kernel);
+             assertCerrar(0);
+         } end
+
+         it("desplazarse en un archivo") {
+             analizadorLinea("buscar 3 t+5", funciones, kernel);
+             t_valor_variable valorT = assertDereferenciar(assertObtenerPosicion('t'));
+             assertMoverCursor(3, valorT+5);
          } end
     } end
 

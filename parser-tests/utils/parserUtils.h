@@ -42,6 +42,8 @@ t_puntero alocar(t_valor_variable);
 void liberar(t_puntero);
 t_descriptor_archivo abrir(t_direccion_archivo, t_banderas);
 void borrar(t_descriptor_archivo);
+void cerrar(t_descriptor_archivo);
+void moverCursor(t_descriptor_archivo, t_valor_variable);
 void escribir(t_descriptor_archivo, void *, t_valor_variable);
 
 t_puntero assertDefinirVariable(t_nombre_variable);
@@ -54,6 +56,8 @@ void assertLiberar(t_puntero);
 void assertEscribir(t_descriptor_archivo, void*, t_valor_variable);
 t_descriptor_archivo assertAbrir(t_direccion_archivo, t_banderas);
 void assertBorrar(t_descriptor_archivo);
+void assertCerrar(t_descriptor_archivo);
+void assertMoverCursor(t_descriptor_archivo, t_valor_variable);
 
 
 #endif //ANSISOP_PARSER_PARSERUTILS_H

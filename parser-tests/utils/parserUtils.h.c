@@ -129,6 +129,17 @@ void borrar(t_descriptor_archivo descriptor){
     queue_push(llamadas, crearLlamada("borrar", 1, descriptor));
 }
 
+void cerrar(t_descriptor_archivo descriptor){
+    log_trace(logger, "Cerrar [%d]", descriptor);
+    queue_push(llamadas, crearLlamada("cerrar", 1, descriptor));
+}
+
+void moverCursor(t_descriptor_archivo descriptor, t_valor_variable posicion){
+    log_trace(logger, "Mover descriptor [%d] a [%d]", descriptor, posicion);
+    queue_push(llamadas, crearLlamada("mover", 2, descriptor, posicion));
+
+}
+
 void escribir(t_descriptor_archivo desc, void * informacion, t_valor_variable tamanio){
     log_trace(logger, "Escribir [%.*s]:%d a [%d]", tamanio, informacion, tamanio, desc);
 
@@ -226,6 +237,23 @@ void assertBorrar(t_descriptor_archivo descriptor){
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("borrar");
     should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
+    free(llamada->parametros);
+    free(llamada);
+}
+
+void assertCerrar(t_descriptor_archivo descriptor){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("cerrar");
+    should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
+    free(llamada->parametros);
+    free(llamada);
+}
+
+void assertMoverCursor(t_descriptor_archivo descriptor, t_valor_variable posicion){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("mover");
+    should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
+    should_int(llamada->parametros[1].valor_variable) be equal to(posicion);
     free(llamada->parametros);
     free(llamada);
 }

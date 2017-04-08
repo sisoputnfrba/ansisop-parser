@@ -298,7 +298,7 @@
 		 * @param	posicion			Posicion a donde mover el cursor
 		 * @return	void
 		 */
-		void (*AnSISOP_buscar)(t_descriptor_archivo descriptor_archivo, t_valor_variable posicion);
+		void (*AnSISOP_moverCursor)(t_descriptor_archivo descriptor_archivo, t_valor_variable posicion);
 
 		/*
 		 * ESCRIBIR ARCHIVO

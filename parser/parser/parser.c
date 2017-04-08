@@ -118,13 +118,24 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 	} else if( _esLlamadaWait(linea) ){
 		AnSISOP_funciones_kernel->AnSISOP_wait( _string_trim(linea + strlen(TEXT_WAIT)) );
 	} else if( _esAbrirArchivo(linea) ){
-		char **operation = string_split(linea, " ");
-		AnSISOP_funciones_kernel->AnSISOP_abrir(_string_trim(operation[2]), _interpretarBanderas(operation[1]));
+		char **operation = string_split(linea + strlen(TEXT_OPEN_FILE), " ");
+		AnSISOP_funciones_kernel->AnSISOP_abrir(_string_trim(operation[1]), _interpretarBanderas(operation[0]));
 		free(operation);
 	} else if( _esBorrarArchivo(linea) ){
 		AnSISOP_funciones_kernel->AnSISOP_borrar(
 				(t_descriptor_archivo) _operar(linea + strlen(TEXT_DELETE_FILE) + 1, AnSISOP_funciones)
 		);
+	} else if( _esCerrarArchivo(linea) ){
+		AnSISOP_funciones_kernel->AnSISOP_cerrar(
+				(t_descriptor_archivo) _operar(linea + strlen(TEXT_CLOSE_FILE) + 1, AnSISOP_funciones)
+		);
+	} else if( _esMoverCursor(linea) ){
+		char **operation = string_split(linea + strlen(TEXT_SEEK_FILE), " ");
+		AnSISOP_funciones_kernel->AnSISOP_moverCursor(
+				(t_descriptor_archivo) _operar(operation[0], AnSISOP_funciones),
+				_operar(operation[1], AnSISOP_funciones)
+		);
+		free(operation);
 	} else if( _esAlocar(linea) ){
 		//MALLOC POSICION CANTIDAD
 		char **operation = string_split(linea + strlen(TEXT_MALLOC), " ");
