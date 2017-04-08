@@ -27,8 +27,10 @@
 	#define TEXT_DELIM ","
 	#define TEXT_FUNCTION "function "
 
-	#define TEXT_PRINT "print "
-	#define TEXT_PRINT_TEXT "textPrint "
+	#define TEXT_PRINT_NUMBER "prints n"
+	#define TEXT_PRINT_STRING "prints s"
+	#define TEXT_PRINT_LITERAL "prints l"
+
 	#define TEXT_CALL "<-"
 	#define TEXT_GOTO "goto "
 
@@ -38,6 +40,9 @@
 
 	#define TEXT_WAIT "wait "
 	#define TEXT_SIGNAL "signal "
+
+	#define TEXT_MALLOC "alocar"
+	#define TEXT_FREE "liberar"
 
 	#define TEXT_ASSIGNATION "="
 	#define TEXT_SUM "+"
@@ -55,5 +60,7 @@
 	#define TEXT_VAR_START_GLOBAL '!'
 	#define TEXT_DEREFERENCE_OP '*'
 	#define TEXT_REFERENCE_OP '&'
+
+	#define EOL '\0'
 
 #endif
