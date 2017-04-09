@@ -2,3 +2,6 @@
 	path = cspec
 	url = https://github.com/jazcarate/cspec.git
 	branch = cmake
+[submodule "commons"]
+	path = commons
+	url = https://github.com/sisoputnfrba/so-commons-library.git
