@@ -12,10 +12,10 @@ create-dirs:
 	mkdir -p build/parser
 
 build/libparser-ansisop.so: create-dirs $(OBJS)
-	$(CC) -shared -Wall -o "build/libparser-ansisop.so" $(OBJS)
+	$(CC) -L"../commons/src/build" -shared -Wall -o "build/libparser-ansisop.so" $(OBJS) -lcommons
 
 build/parser/%.o: parser/%.c
-	$(CC) -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	$(CC) -I"../commons/src" -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 
 # Add debug parameters and compile
 debug: CC += -DDEBUG -g
@@ -24,6 +24,9 @@ debug: all
 # Clean build files
 clean:
 	$(RM) build
+
+dependents:
+	-cd ../commons/ && $(MAKE) all
 
 install: all
 	cp -u build/libparser-ansisop.so /usr/lib
