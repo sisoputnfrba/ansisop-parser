@@ -1,0 +1,13 @@
+language: c
+compiler: gcc
+
+before_install:
+    - cd cspec
+    - make install
+install: make all
+
+script: make test
+
+notifications:
+  email:
+    - J@florius.com.ar

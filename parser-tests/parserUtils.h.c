@@ -96,7 +96,7 @@ void asignar(t_puntero puntero, t_valor_variable valor_variable){
 
 void irAlLabel(t_nombre_etiqueta nombre_etiqueta) {
     log_trace(logger, "Ir al Label [%s]", nombre_etiqueta);
-    queue_push(llamadas, crearLlamada("irAlLabel", 1, strdup(nombre_etiqueta)));
+    queue_push(llamadas, crearLlamada("irAlLabel", 1, string_duplicate(nombre_etiqueta)));
 }
 
 t_puntero alocar(t_valor_variable espacio){
@@ -217,9 +217,9 @@ void assertEscribir(t_descriptor_archivo descriptor, void * informacion, t_valor
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("escribir");
     should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
-    should_string((char*)llamada->parametros[1].puntero) be equal to(informacion);
+    should_string(llamada->parametros[1].string) be equal to(informacion);
     should_int(llamada->parametros[2].valor_variable) be equal to(tamanio);
-    free((void *) llamada->parametros[1].puntero);
+    free(llamada->parametros[1].string);
     free(llamada->parametros);
     free(llamada);
 }

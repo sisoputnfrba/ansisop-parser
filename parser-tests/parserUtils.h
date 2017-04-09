@@ -16,6 +16,7 @@
         t_puntero puntero;
         t_valor_variable valor_variable;
         t_nombre_etiqueta nombre_etiqueta;
+        char* string;
         t_descriptor_archivo descriptor_archivo;
         t_direccion_archivo direccion_archivo;
         t_banderas banderas;

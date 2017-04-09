@@ -22,6 +22,7 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
+	#include <sys/types.h>
 
 	#include <commons/collections/dictionary.h>
 	#include <commons/string.h>

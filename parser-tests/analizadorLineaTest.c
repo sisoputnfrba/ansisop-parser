@@ -1,6 +1,6 @@
 #include <parser/parser.h>
 #include <cspecs/cspec.h>
-#include "utils/parserUtils.h"
+#include "parserUtils.h"
 
 AnSISOP_funciones *funciones = NULL;
 AnSISOP_kernel *kernel = NULL;

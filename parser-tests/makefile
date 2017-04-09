@@ -1,24 +1,37 @@
 RM=rm -rf
-CC=gcc
-DIR=build
-OUTPUT=test
+CC=gcc -std=c99
+
+C_SPEC=../cspec
+C_SPEC_BIN=$(C_SPEC)/release
 
 C_SRCS=$(shell find . -iname "*.c" | tr '\n' ' ')
+OBJS=$(C_SRCS:./%.c=build/%.o)
 
-# Clean and compile .so
-all:
-	$(CC) $(C_SRCS) -o $(DIR)/$(OUTPUT) -lcommons -lparser-ansisop -lcspecs
+all: build/test
 
-build:
-	mkdir -p $(DIR)
-	make all
+create-dirs:
+	mkdir -p build
 
-test:
-	make build
-	./$(DIR)/$(OUTPUT)
+build/test: dependents create-dirs $(OBJS)
+	$(CC) -L"../parser/build" -L"$(C_SPEC_BIN)" -o "build/ansisop-tests" $(OBJS) -lcommons -lparser-ansisop -lcspecs
 
-# Clean build files
+build/%.o: ./%.c
+	$(CC) -I"../parser" -I"$(C_SPEC)" -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+
+debug: CC += -DDEBUG -g
+debug: all
+
 clean:
-	$(RM) $(DIR)
+	$(RM) build
 
-.PHONY: all clean build test
+test: all
+	LD_LIBRARY_PATH="../parser/build/:$(C_SPEC_BIN)" build/ansisop-tests
+
+dependents: install-cspec
+	-cd ../parser/ && $(MAKE) all
+
+install-cspec:
+	-cd ../ && git submodule init && git submodule update
+	-cd ../cspec && $(MAKE) all
+
+.PHONY: all create-dirs clean install-cspec
