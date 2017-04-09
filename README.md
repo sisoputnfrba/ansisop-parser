@@ -1,7 +1,7 @@
 # AnSISOP Parser
 =================
-
 ![AnSISOP](http://i.imgur.com/joNONHL.png)
+[![Build Status](https://travis-ci.org/sisoputnfrba/ansisop-parser.svg?branch=master)](https://travis-ci.org/sisoputnfrba/ansisop-parser)
 
 En este repositorio encontrarán el analizador de linea del lenguaje inventado **AnSISOP**, junto con herramientas útiles para obtener meta data de un programa, a ser utilizados en los trabajos prácticos "*Está CoverFlow*" y "*Elestac*" de Sistemas Operativos, 1<sup>er</sup> cuatrimestre, 2014 y 2016 respectivamente.
 
