@@ -1,4 +1,4 @@
 [submodule "cspec"]
 	path = cspec
-	url = git://github.com:jazcarate/cspec.git
+	url = https://github.com/jazcarate/cspec.git
 	branch = cmake
