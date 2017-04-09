@@ -1,13 +1,10 @@
 language: c
 compiler: gcc
 
-before_install:
-    - cd cspec
-    - make all
+before_install: cd parser-tests
 install: make all
-
 script: make test
 
 notifications:
   email:
-    - J@florius.com.ar
+    - j@florius.com.ar
