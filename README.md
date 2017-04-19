@@ -43,15 +43,5 @@ Por ejemplo:
 
 ## Tests
 
-Para ejecutar los tests es necesario tener instalado CMake.
-
-```
-git submodule update --init # Clonar cspec
-cd cspec
-make                        # Compilar cspec
-sudo make install           # Instalar cspec
-cd ..
-cmake .                     # Generar Makefile
-make                        # Compilar proyecto
-./so-parser-dummy/dummy     # Ejecutar los tests
+Para ejecutar los tests simplemente hacer `make test` dentro del subdirectorio de `parset-tests`
 ```

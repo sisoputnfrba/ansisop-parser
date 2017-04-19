@@ -41,4 +41,4 @@ install-cspec:
 	-cd ../ && git submodule init && git submodule update
 	-cd ../cspec && $(MAKE) all
 
-.PHONY: all create-dirs clean install-cspec
+.PHONY: all create-dirs clean install-cspec install-commons
