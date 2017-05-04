@@ -5,7 +5,7 @@
 
 En este repositorio encontrarán el analizador de linea del lenguaje inventado **AnSISOP**, junto con herramientas útiles para obtener meta data de un programa, a ser utilizados en trabajos prácticos como "*Está CoverFlow*", "*Elestac*", entre otros.
 
-La documentación completa de cada función a implementar se encuentra en [documentación completa](parser/parser/parser.h#L55-L260)
+La documentación completa de cada función a implementar se encuentra en [documentación completa](parser/parser/parser.h)
 
 ## Biblioteca compartida **parser**
 La biblioteca cuenta con dos grandes funcionalidades:
