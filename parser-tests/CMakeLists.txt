@@ -5,7 +5,8 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDEBUG -g -std=gnu99 -Wall")
 
 set(SOURCE_FILES
         analizadorLineaTest.c
-        parserUtils.h parserUtils.h.c)
+        parserUtils.h
+        parserUtils.c)
 
 add_executable(tests ${SOURCE_FILES})
 include_directories(${CMAKE_SOURCE_DIR}/parser)
