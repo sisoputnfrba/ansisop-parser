@@ -41,7 +41,9 @@ Por ejemplo:
 #include <parser/metadata_program.h>
 ```
 
+#### Andamiaje para el uso:
+Dentro de este mismo repositorio se encuentra el proyecto de [dummy-cpu](dummy-cpu) que sive como una primera aproximacion del desarollo de la CPU
+
 ## Tests
 
 Para ejecutar los tests simplemente hacer `make test` dentro del subdirectorio de `parset-tests`
-```
