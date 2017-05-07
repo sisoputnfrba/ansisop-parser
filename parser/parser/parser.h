@@ -30,7 +30,7 @@
 	#include <commons/error.h>
 
 	//Descriptores
-	#define DESCRIPTOR_SALIDA 0
+	#define DESCRIPTOR_SALIDA 1
 
 	//Tipos de datos
 	typedef u_int32_t t_puntero;
