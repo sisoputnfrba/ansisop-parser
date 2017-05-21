@@ -82,6 +82,13 @@ t_puntero obtenerPosicionVariable(t_nombre_variable nombre_variable){
     CON_RETORNO_PUNTERO;
 }
 
+t_valor_variable obtenerValorCompartida(t_nombre_compartida nombre_variable){
+    log_trace(logger, "Obtener valor de variable compartida [%s]", nombre_variable);
+
+    queue_push(llamadas, crearLlamada("obtenerValorCompartida", 1, nombre_variable));
+    CON_RETORNO_VALOR;
+}
+
 t_valor_variable dereferenciar(t_puntero puntero){
     log_trace(logger, "Dereferenciar [%p]", puntero);
 
@@ -168,6 +175,15 @@ t_puntero assertObtenerPosicion(t_nombre_variable nombre_variable){
     free(llamada->parametros);
     free(llamada);
     return ultimoRetorno()->puntero;
+}
+
+t_valor_variable assertObtenerValorCompartida(t_nombre_compartida nombre_variable){
+    Llamada* llamada = ultimaLlamada();
+    should_string(llamada->nombre) be equal to("obtenerValorCompartida");
+    should_string(llamada->parametros[0].nombre_compartida) be equal to(nombre_variable);
+    free(llamada->parametros);
+    free(llamada);
+    return ultimoRetorno()->valor_variable;
 }
 
 t_valor_variable assertDereferenciar(t_puntero puntero){

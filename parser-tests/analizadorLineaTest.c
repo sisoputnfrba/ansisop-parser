@@ -4,7 +4,7 @@
 
 AnSISOP_funciones *funciones = NULL;
 AnSISOP_kernel *kernel = NULL;
-bool imprimirEnPantalla = false;
+bool imprimirEnPantalla = true;
 
 context (parser) {
 
@@ -15,9 +15,11 @@ context (parser) {
 
         funciones->AnSISOP_definirVariable = definirVariable;
         funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
+        funciones->AnSISOP_obtenerValorCompartida = obtenerValorCompartida;
         funciones->AnSISOP_dereferenciar = dereferenciar;
         funciones->AnSISOP_asignar = asignar;
         funciones->AnSISOP_irAlLabel = irAlLabel;
+
 
         kernel->AnSISOP_reservar = alocar;
         kernel->AnSISOP_liberar = liberar;
@@ -76,6 +78,13 @@ context (parser) {
                 t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
                 t_puntero posicionB = assertObtenerPosicion('b');
                 char *valorAImprimir = string_itoa(valorX + 53 - posicionB);
+                assertEscribir(DESCRIPTOR_SALIDA, valorAImprimir, string_length(valorAImprimir)+1);
+        } end
+
+        it("imprimir un valor de una variable compartida") {
+                analizadorLinea("prints n !colas", funciones, kernel);
+                t_valor_variable valorColas = assertObtenerValorCompartida("colas");
+                char *valorAImprimir = string_itoa(valorColas);
                 assertEscribir(DESCRIPTOR_SALIDA, valorAImprimir, string_length(valorAImprimir)+1);
         } end
 
