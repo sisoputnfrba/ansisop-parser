@@ -272,10 +272,10 @@
 		 * Informa al Kernel que el proceso requiere que se borre un archivo.
 		 *
 		 * @syntax 	TEXT_DELETE_FILE (borrar)
-		 * @param	direccion		Ruta al archivo a abrir
+		 * @param	descriptor_archivo		Descriptor de archivo del archivo a borrar
 		 * @return	void
 		 */
-		void (*AnSISOP_borrar)(t_descriptor_archivo direccion);
+		void (*AnSISOP_borrar)(t_descriptor_archivo descriptor_archivo);
 
 		/*
 		 * CERRAR ARCHIVO
