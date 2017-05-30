@@ -161,7 +161,7 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		free(operation);
 	} else if( _esLiberar(linea) ){
 		//FREE POSICION
-		AnSISOP_funciones_kernel->AnSISOP_liberar( _obtenerPosicion(_string_trim(linea + strlen(TEXT_FREE)), AnSISOP_funciones) );
+		AnSISOP_funciones_kernel->AnSISOP_liberar( _operar(_string_trim(linea + strlen(TEXT_FREE)), AnSISOP_funciones) );
 	} else if( _esLlamadaFuncion(linea) ){
 		//RETORNO <- ETIQUETA PARAMETROS
 		char* *ret = _separarOperadores(linea, TEXT_CALL);

@@ -69,8 +69,20 @@ context (parser) {
 
         it("liberar") {
             analizadorLinea("liberar x", funciones, kernel);
-                t_puntero posicionX = assertObtenerPosicion('x');
-                assertLiberar(posicionX);
+            t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
+            assertLiberar(valorX);
+        } end
+
+        it("liberar una posicion") {
+            analizadorLinea("liberar &x", funciones, kernel);
+            t_valor_variable posicionX = assertObtenerPosicion('x');
+            assertLiberar(posicionX);
+        } end
+
+        it("liberar se puede operar como cualquier asignacion") {
+            analizadorLinea("liberar x+5", funciones, kernel);
+            t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
+            assertLiberar(valorX + 5);
         } end
 
         it("imprimir un valor") {
