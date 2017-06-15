@@ -126,12 +126,14 @@ context (parser) {
         } end
 
          it("abrir un archivo") {
-            analizadorLinea("abrir LC /utn/so/archivo", funciones, kernel);
-            assertAbrir("/utn/so/archivo", (t_banderas){.lectura = true, .escritura = false, .creacion = true}); 
+            analizadorLinea("abrir a LC /utn/so/archivo", funciones, kernel);
+            t_descriptor_archivo fdAbierto = assertAbrir("/utn/so/archivo", (t_banderas){.lectura = true, .escritura = false, .creacion = true});
+            t_puntero posicionA = assertObtenerPosicion('a');
+            assertAsignar(posicionA, fdAbierto);
          } end
 
          it("abrir un archivo, los flags importan") {
-            analizadorLinea("abrir LE /utn/so/archivo", funciones, kernel);
+            analizadorLinea("abrir a LE /utn/so/archivo", funciones, kernel);
             assertAbrir("/utn/so/archivo", (t_banderas){.lectura = true, .escritura = true, .creacion = false});
          } end
             
