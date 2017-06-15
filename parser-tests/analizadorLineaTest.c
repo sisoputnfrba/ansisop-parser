@@ -34,11 +34,10 @@ context (parser) {
 
     setup();
 
-    before {
-        limpiarElContextoDeEjecucion();
-    } end
-
     describe("Si al parser") {
+        before {
+            limpiarElContextoDeEjecucion();
+        } end
 
         it("definicion de variables") {
             analizadorLinea("variables x, a, g", funciones, kernel);
