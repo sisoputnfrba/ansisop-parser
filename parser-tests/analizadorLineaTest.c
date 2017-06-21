@@ -103,6 +103,12 @@ context (parser) {
             analizadorLinea("prints l Holitas", funciones, kernel);
             assertEscribir(DESCRIPTOR_SALIDA, "Holitas", 8);
         } end
+            
+        it("imprimir un literal a un FD como variable") {
+            analizadorLinea("prints f+2 Holitas", funciones, kernel);
+            t_valor_variable valorF = assertDereferenciar(assertObtenerPosicion('x'));
+            assertEscribir(valorF+2, "Holitas", 8);
+        } end
 
         it("imprimir un string en memoria") {
             //setup un dereferenciar de mentira
