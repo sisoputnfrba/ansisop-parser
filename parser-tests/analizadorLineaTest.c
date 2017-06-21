@@ -164,6 +164,12 @@ context (parser) {
              t_puntero posicionT = assertObtenerPosicion('t');
              assertLeer(1, posicionT, 4-2);
          } end
+            
+         it("leer de un archivo con fd que sea una variable") {
+             analizadorLinea("leer a 1 2", funciones, kernel);
+             t_valor_variable valorA = assertDereferenciar(assertObtenerPosicion('a'));
+             assertLeer(valorA, 1, 2);
+         } end
 
          it("escribir en un archivo") {
              funciones->AnSISOP_obtenerPosicionVariable = ({
