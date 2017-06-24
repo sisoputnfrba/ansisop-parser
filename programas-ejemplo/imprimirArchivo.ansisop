@@ -1,0 +1,6 @@
+begin
+	variables a, b
+	abrir a LC /foo
+	leer a b 10
+	prints s b
+end
