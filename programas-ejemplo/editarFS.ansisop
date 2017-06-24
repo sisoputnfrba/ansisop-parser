@@ -1,0 +1,8 @@
+begin
+	variables a, b
+	abrir b /unArchivo
+	malloc a 500
+	leer b a 5
+	*a = 70
+	escribir b a 5
+end
