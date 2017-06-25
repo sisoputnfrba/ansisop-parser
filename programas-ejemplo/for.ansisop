@@ -13,7 +13,7 @@ variables f, i, t
 	i=i+1
 	
 	#Imprimir el contador
-	print i
+	prints n i
 
 	#`t`: Comparador entre `i` y `f`
 	t=f-i
