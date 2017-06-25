@@ -1,0 +1,8 @@
+#!/usr/bin/ansisop
+
+begin
+	variables a
+	:ready
+	alocar a 500
+	goto ready
+end

@@ -1,0 +1,10 @@
+#!/usr/bin/ansisop
+
+begin
+	variables a, b
+	abrir b LC /unArchivo
+	alocar a 200
+	leer b a b 10
+	prints s b
+	#Sin cerrarlo
+end
