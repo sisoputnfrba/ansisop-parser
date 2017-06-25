@@ -1,8 +1,12 @@
+#!/usr/bin/ansisop
+
 begin
 	variables a, b
-	malloc a 500
-	abrir b /unArchivo
-	leer b a 5
+	alocar a 500
+	abrir b LEC /unArchivo
+	leer b a 10
 	*a = 70
-	escribir b a 5
+	escribir b a 10
+	cerrar b
+	liberar a
 end
