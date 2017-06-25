@@ -1,0 +1,13 @@
+#!/usr/bin/ansisop
+
+begin
+	variables a, t
+	alocar a 50
+    #Si escribo un poquitin antes?    
+    t = a-1
+    *t = 522
+
+	liberar a
+    #Si escribo un sector liberado?
+    *a = 12444
+end
