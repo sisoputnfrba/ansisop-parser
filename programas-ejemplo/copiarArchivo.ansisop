@@ -1,0 +1,13 @@
+#!/usr/bin/ansisop
+
+begin
+	variables a, f, g
+	alocar a 500
+	abrir f LEC /origen
+	abrir g LEC /destino
+	leer f a 10
+	escribir g a 10
+	cerrar f
+	cerrar g
+	liberar a
+end
