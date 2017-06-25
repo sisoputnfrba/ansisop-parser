@@ -165,6 +165,13 @@ context (parser) {
              assertLeer(1, posicionT, 4-2);
          } end
 
+         it("leer de un archivo con fd que sea una variable") {
+             analizadorLinea("leer a t 2", funciones, kernel);
+             t_puntero posicionT = assertObtenerPosicion('t');
+             t_valor_variable valorA = assertDereferenciar(assertObtenerPosicion('a'));
+             assertLeer(valorA, posicionT, 2);
+         } end
+
          it("escribir en un archivo") {
              funciones->AnSISOP_obtenerPosicionVariable = ({
                t_puntero __obtenerDeMentira(t_nombre_variable _){
@@ -182,6 +189,13 @@ context (parser) {
              //Rollback
              funciones->AnSISOP_obtenerPosicionVariable = obtenerPosicionVariable;
              funciones->AnSISOP_dereferenciar = dereferenciar;
+         } end
+
+         it("escribir en un archivo con un fd variable") {
+             analizadorLinea("escribir a+3 t 0", funciones, kernel);
+             t_valor_variable valorT = assertDereferenciar(assertObtenerPosicion('t'));
+             t_valor_variable valorA = assertDereferenciar(assertObtenerPosicion('a'));
+             assertEscribir(valorA+3, 0, 0);
          } end
     } end
 

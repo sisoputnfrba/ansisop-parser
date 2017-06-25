@@ -233,9 +233,11 @@ void assertEscribir(t_descriptor_archivo descriptor, void * informacion, t_valor
     Llamada* llamada = ultimaLlamada();
     should_string(llamada->nombre) be equal to("escribir");
     should_int(llamada->parametros[0].descriptor_archivo) be equal to(descriptor);
-    should_string(llamada->parametros[1].string) be equal to(informacion);
+    if(informacion){
+        should_string(llamada->parametros[1].string) be equal to(informacion);
+        free(llamada->parametros[1].string);
+    }
     should_int(llamada->parametros[2].valor_variable) be equal to(tamanio);
-    free(llamada->parametros[1].string);
     free(llamada->parametros);
     free(llamada);
 }
