@@ -161,15 +161,15 @@ context (parser) {
 
          it("leer de un archivo") {
              analizadorLinea("leer 1 t 4-2", funciones, kernel);
-             t_puntero posicionT = assertObtenerPosicion('t');
-             assertLeer(1, posicionT, 4-2);
+             t_puntero valorT = assertDereferenciar(assertObtenerPosicion('t'));
+             assertLeer(1, valorT, 4-2);
          } end
 
          it("leer de un archivo con fd que sea una variable") {
              analizadorLinea("leer a t 2", funciones, kernel);
-             t_puntero posicionT = assertObtenerPosicion('t');
-             t_valor_variable valorA = assertDereferenciar(assertObtenerPosicion('a'));
-             assertLeer(valorA, posicionT, 2);
+             t_puntero valorT = assertDereferenciar(assertObtenerPosicion('t'));
+             t_descriptor_archivo valorA = assertDereferenciar(assertObtenerPosicion('a'));
+             assertLeer(valorA, valorT, 2);
          } end
 
          it("escribir en un archivo") {

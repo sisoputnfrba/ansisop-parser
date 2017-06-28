@@ -128,7 +128,7 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 		char **operation = string_split(linea + strlen(TEXT_READ_FILE), " ");
 		AnSISOP_funciones_kernel->AnSISOP_leer(
 				(t_descriptor_archivo) _operar(operation[0], AnSISOP_funciones),
-				_obtenerPosicion(operation[1], AnSISOP_funciones),
+				(t_puntero) _operar(operation[1], AnSISOP_funciones),
 				_operar(operation[2], AnSISOP_funciones)
 		);
 		free(operation);
