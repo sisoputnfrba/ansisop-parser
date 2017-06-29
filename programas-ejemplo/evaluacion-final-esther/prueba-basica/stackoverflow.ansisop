@@ -1,0 +1,21 @@
+begin
+	variables a
+	a <- f
+	prints n a
+end
+
+function f
+	variables a
+	a=1
+	prints n a
+	a <- g
+	return a
+end
+
+function g
+	variables a
+	a=0
+	prints n a
+	a <- f
+	return a
+end
