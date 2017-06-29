@@ -1,6 +1,6 @@
 begin
   variables a, f
-  alocar a 500
+  alocar a 100
   abrir f LE /archivo.bin
   wait mutexArch
     a*=88
