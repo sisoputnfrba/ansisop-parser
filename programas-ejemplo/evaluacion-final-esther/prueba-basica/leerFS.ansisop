@@ -8,6 +8,7 @@ begin
   signal mutexArch
   wait b
     !pasadas=!pasadas + 1
+    prints n !pasadas
   signal b
   cerrar f
   liberar a
