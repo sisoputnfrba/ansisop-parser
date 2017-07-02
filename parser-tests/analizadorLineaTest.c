@@ -54,6 +54,12 @@ context (parser) {
                 assertAsignar(posicionX, valorA+3);
         } end
 
+        it("asignacion de punteros de variables") {
+           analizadorLinea("*x=3", funciones, kernel);
+           t_valor_variable valorX = assertDereferenciar(assertObtenerPosicion('x'));
+           assertAsignar((t_puntero) valorX, 3);
+        } end
+
         it("ir a etiqueta") {
             analizadorLinea("goto inicio", funciones, kernel);
             assertIrAlLabel("inicio");
