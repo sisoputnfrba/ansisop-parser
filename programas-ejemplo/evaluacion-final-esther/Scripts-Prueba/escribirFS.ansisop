@@ -1,0 +1,15 @@
+begin
+  variables a, f
+  alocar a 100
+  abrir f LE /archivo.bin
+  wait mutexArch
+    a*=88
+    escribir f a 10
+  signal mutexArch
+  wait b
+    !pasadas=!pasadas + 1
+    prints n !pasadas
+  signal b
+  cerrar f
+  liberar a
+end
