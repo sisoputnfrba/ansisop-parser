@@ -1,0 +1,10 @@
+begin
+  variables a, f
+  alocar a 100
+  abrir f LE /largeFile.bin
+  buscar f 332270
+  a*=88
+  escribir f a 10
+  cerrar f
+  liberar a
+end

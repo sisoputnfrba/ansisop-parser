@@ -1,0 +1,9 @@
+begin
+  variables a, f
+  alocar a 100
+  abrir f LE /smallFile.bin
+  a*=88
+  escribir f a 10
+  cerrar f
+  liberar a
+end

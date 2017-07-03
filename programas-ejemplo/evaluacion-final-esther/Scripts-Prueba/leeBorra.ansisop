@@ -1,0 +1,10 @@
+begin
+  variables a, f
+  alocar a 100
+  abrir f LE /smallFile.bin
+  leer f a 10
+  prints n *a
+  borrar f
+  cerrar f
+  liberar a
+end
