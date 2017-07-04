@@ -122,7 +122,7 @@ context (parser) {
                     return stringEnMemoria[puntero];
                 } __dereferenciarMentira; });
 
-            analizadorLinea("prints s x", funciones, kernel);
+            analizadorLinea("prints s &x", funciones, kernel);
             assertEscribir(DESCRIPTOR_SALIDA, "Hola", 5);
 
             //Rollback
@@ -141,7 +141,7 @@ context (parser) {
             analizadorLinea("abrir a LE /utn/so/archivo", funciones, kernel);
             assertAbrir("/utn/so/archivo", (t_banderas){.lectura = true, .escritura = true, .creacion = false});
          } end
-            
+
          it("borrar un archivo") {
             analizadorLinea("borrar t", funciones, kernel);
             t_puntero posicionT = assertObtenerPosicion('t');
@@ -189,7 +189,7 @@ context (parser) {
                   return stringEnMemoria[puntero];
                 } __dereferenciarMentira; });
 
-             analizadorLinea("escribir 0 t 3", funciones, kernel);
+             analizadorLinea("escribir 0 &t 3", funciones, kernel);
              assertEscribir(0, "bam", 3);
 
              //Rollback
@@ -198,7 +198,7 @@ context (parser) {
          } end
 
          it("escribir en un archivo con un fd variable") {
-             analizadorLinea("escribir a+3 t 0", funciones, kernel);
+             analizadorLinea("escribir a+3 &t 0", funciones, kernel);
              t_valor_variable valorT = assertDereferenciar(assertObtenerPosicion('t'));
              t_valor_variable valorA = assertDereferenciar(assertObtenerPosicion('a'));
              assertEscribir(valorA+3, 0, 0);

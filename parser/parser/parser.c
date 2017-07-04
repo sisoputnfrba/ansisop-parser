@@ -185,7 +185,7 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 }
 
 char* _obtenerString(char *operacionPuntero, bool (*deberiaFrenar)(char, int), AnSISOP_funciones *AnSISOP_funciones) {
-	t_puntero posicionInicial = _obtenerPosicion(_string_trim(operacionPuntero), AnSISOP_funciones);
+	t_puntero posicionInicial = _operar(_string_trim(operacionPuntero), AnSISOP_funciones);
 	int offset = 0;
 	char* texto = string_new();
 	for (;;){
