@@ -1,10 +1,9 @@
 begin
   variables a, f
   alocar a 100
-  abrir f LE /largeFile.bin
-  buscar f 332270
-  a*=88
-  escribir f a 10
+  abrir f LEC /largeFile.bin
+  *a=88
+  escribir f a 332280
   cerrar f
   liberar a
 end
