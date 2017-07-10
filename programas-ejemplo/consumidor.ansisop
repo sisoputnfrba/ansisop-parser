@@ -3,7 +3,7 @@ begin
 	:etiqueta
 	
 	wait c
-		print !colas
+		prints n !colas
 	signal b
 	
 	#Ciclar indefinidamente
