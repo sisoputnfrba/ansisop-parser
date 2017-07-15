@@ -1,9 +1,25 @@
 begin
-  variables a, f
-  alocar a 100
+  variables a, f, p, i, t
+  # reservo 65 para no buscar fuera del archivo
+  t=65
+  i=24
+  # reservo el bloque que voy a copiar
+  alocar a t
+  *a=60
+  # abro el archivo destino
   abrir f LEC /largeFile.bin
-  *a=88
-  escribir f a 332280
+  # p apunta siempre al byte anterior al nuevo bloque de 90
+  p=0
+  p= p-1
+  :escribeotro
+  escribir f a t
+  i=i-1
+  # adelanto 64 bytes, al byte anterior al siguiente bloque
+  p=p+64
+  buscar f p
+  # loopeo
+  jnz i escribeotro
+  # cleanup
   cerrar f
   liberar a
 end
