@@ -84,7 +84,9 @@ void analizadorLinea(char* const instruccion, AnSISOP_funciones *AnSISOP_funcion
 
 		free(operation);
 	} else if( _esImprimirVariable(linea) ){
-		_imprimir(string_itoa( _operar(_string_trim(linea + strlen(TEXT_PRINT_NUMBER)), AnSISOP_funciones)), AnSISOP_funciones_kernel );
+		char *numero = string_itoa( _operar(_string_trim(linea + strlen(TEXT_PRINT_NUMBER)), AnSISOP_funciones));
+		_imprimir(numero, AnSISOP_funciones_kernel );
+		free(numero);
 	} else if(_esImprimirLiteral(linea) ){
 		//No trimeo, proque imprime el literal, pero separo el primer caracter
 		_imprimir(linea + strlen(TEXT_PRINT_LITERAL)+1, AnSISOP_funciones_kernel);
